@@ -148,18 +148,29 @@ class DrawPenView : View {
     }
 
     override fun onDraw(canvas: Canvas) {
-        canvas.drawColor(mContext!!.resources.getColor(R.color.transparent))
+        if (mBottomBitmap == null) {
+            if (width > 0 && height > 0) {
+                mBottomBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
+                mCanvas = Canvas(mBottomBitmap!!)
+                showPoints()
+            } else {
+                return
+            }
+        }
+        canvas.drawColor(Color.TRANSPARENT)
         val nCanvasHeight = canvas.height
         val nBitmapHeight = mBottomBitmap!!.height
         mBottomBitmapDrawHeight = (nCanvasHeight - nBitmapHeight) / 2
         canvas.drawBitmap(mBottomBitmap!!, 0f, mBottomBitmapDrawHeight.toFloat(), mBitmapPaint)
         if (mPath != null) {
+            if (mPaint == null) {
+                initPaint()
+            }
             canvas.drawPath(mPath!!, mPaint!!)
         }
     }
 
     override fun onTouchEvent(event: MotionEvent): Boolean {
-        Log.e("DrawPenView", "onTouchEvent: action=${event.action}, DISABLE=${OperationUtils.DISABLE}, Type=${OperationUtils.mCurrentDrawType}")
         if (OperationUtils.DISABLE && (OperationUtils.mCurrentDrawType == OperationUtils.DRAW_PEN || OperationUtils.mCurrentDrawType == OperationUtils.DRAW_ERASER)) {
             val x = event.x
             val y = event.y
@@ -280,10 +291,4 @@ class DrawPenView : View {
         postInvalidate()
     }
 
-    override fun dispatchTouchEvent(event: MotionEvent): Boolean {
-        Log.e("DrawPenView", "dispatchTouchEvent: " + event.action + ", Clickable=" + isClickable)
-        val result = super.dispatchTouchEvent(event)
-        Log.e("DrawPenView", "dispatchTouchEvent result: " + result)
-        return result
-    }
 }

@@ -33,9 +33,9 @@ class DrawPoint {
             val dp = DrawPoint()
             try {
                 dp.type = drawPoint.type
-                var dtp = DrawTextPoint()
-                dtp = BeanUtil.CopyBeanToBean(drawPoint.drawText!!, dtp) as DrawTextPoint
-                dp.drawText = dtp
+                if (drawPoint.drawText != null) {
+                    dp.drawText = drawPoint.drawText!!.copy()
+                }
             } catch (e: Exception) {
                 e.printStackTrace()
             }

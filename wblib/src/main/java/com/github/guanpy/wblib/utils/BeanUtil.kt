@@ -22,15 +22,24 @@ object BeanUtil {
 
         for (m1 in methods1) {
             val name1 = m1.name
+            var suffix1 = ""
             if (name1.startsWith("get")) {
-                val suffix1 = name1.substring(3)
+                suffix1 = name1.substring(3)
+            } else if (name1.startsWith("is")) {
+                suffix1 = name1.substring(2)
+            }
+            if (suffix1.isNotEmpty()) {
                 for (m2 in methods2) {
                     val name2 = m2.name
                     if (name2.startsWith("set")) {
                         val suffix2 = name2.substring(3)
                         if (suffix1 == suffix2) {
-                            val value = m1.invoke(obj1)
-                            m2.invoke(obj2, value)
+                            try {
+                                val value = m1.invoke(obj1)
+                                m2.invoke(obj2, value)
+                            } catch (e: Exception) {
+                                // Ignore invocation errors
+                            }
                         }
                     }
                 }

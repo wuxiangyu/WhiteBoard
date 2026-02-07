@@ -785,10 +785,4 @@ class WhiteBoardActivity : BaseActivity(), View.OnClickListener {
         }
     }
 
-    override fun dispatchTouchEvent(ev: android.view.MotionEvent): Boolean {
-        if (ev.action == android.view.MotionEvent.ACTION_DOWN) {
-             android.util.Log.e("WhiteBoardActivity", "dispatchTouchEvent: ACTION_DOWN")
-        }
-        return super.dispatchTouchEvent(ev)
-    }
 }

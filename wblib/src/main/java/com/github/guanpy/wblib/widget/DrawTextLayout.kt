@@ -35,26 +35,11 @@ class DrawTextLayout : FrameLayout {
     }
 
     fun init(activity: Activity) {
-        val params = this.layoutParams
-        if (activity.windowManager != null) {
-            val display = activity.windowManager.defaultDisplay
-            params.width = display.width
-            params.height = display.width
-        }
-        this.layoutParams = params
         this.setBackgroundColor(resources.getColor(R.color.transparent))
         showPoints()
     }
 
-    override fun dispatchTouchEvent(ev: MotionEvent): Boolean {
-        Log.e("DrawTextLayout", "dispatchTouchEvent: " + ev.action)
-        val result = super.dispatchTouchEvent(ev)
-        Log.e("DrawTextLayout", "dispatchTouchEvent result: " + result)
-        return result
-    }
-
     override fun onTouchEvent(event: MotionEvent): Boolean {
-        Log.e("DrawTextLayout", "onTouchEvent: action=${event.action}, Type=${OperationUtils.mCurrentDrawType}")
         if (OperationUtils.mCurrentDrawType == OperationUtils.DRAW_TEXT && OperationUtils.DISABLE) {
             when (event.action) {
                 MotionEvent.ACTION_DOWN -> {
@@ -66,7 +51,6 @@ class DrawTextLayout : FrameLayout {
                     if (width - moveX < dip2px(MARGIN_RIGHT.toFloat())) {
                         moveX = moveX - dip2px(MARGIN_RIGHT.toFloat())
                     }
-                    Log.d("添加文字", "-$moveX,$moveY")
                     val ip = DrawTextPoint()
                     ip.x = moveX
                     ip.y = moveY
@@ -80,6 +64,7 @@ class DrawTextLayout : FrameLayout {
                     //                    OperationUtils.getInstance().getSavePoints().add(drawPoint);
                     showPoints()
                     showNewPoint(drawPoint)
+                    return true
                 }
             }
         }
@@ -88,7 +73,6 @@ class DrawTextLayout : FrameLayout {
 
     fun showPoints() {
         val size = OperationUtils.savePoints.size
-        Log.d("gpy", "显示文字列表--$size")
         this.removeAllViews()
         if (size == 0) {
             return
@@ -111,11 +95,15 @@ class DrawTextLayout : FrameLayout {
      * 文字编辑之后
      */
     fun afterEdit(isSave: Boolean) {
-        (getChildAt(childCount - 1) as DrawTextView).afterEdit(isSave)
+        if (childCount > 0) {
+            val view = getChildAt(childCount - 1)
+            if (view is DrawTextView) {
+                view.afterEdit(isSave)
+            }
+        }
     }
 
     private fun showNewPoint(dp: DrawPoint) {
-        Log.d("gpy", "显示新建文字")
         if (dp.type == OperationUtils.DRAW_TEXT && dp.drawText!!.isVisible && dp.drawText!!.status != DrawTextView.TEXT_DELETE) {
             val dw = DrawTextView(
                 mContext!!,

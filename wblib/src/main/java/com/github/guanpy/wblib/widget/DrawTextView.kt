@@ -19,6 +19,7 @@ import com.github.guanpy.library.EventBus
 import com.github.guanpy.wblib.R
 import com.github.guanpy.wblib.bean.DrawPoint
 import com.github.guanpy.wblib.utils.Events
+import com.github.guanpy.wblib.utils.MultiTouchListener
 import com.github.guanpy.wblib.utils.OperationUtils
 
 class DrawTextView(context: Context, drawPoint: DrawPoint?, callBackListener: CallBackListener?) :
@@ -90,6 +91,9 @@ class DrawTextView(context: Context, drawPoint: DrawPoint?, callBackListener: Ca
         mBtTextEdit = findViewById<Button>(R.id.bt_text_edit)
         if (null != mDrawPoint) {
             setText(mDrawPoint!!.drawText!!.str)
+            mRlContent!!.rotation = mDrawPoint!!.drawText!!.rotation
+            mRlContent!!.scaleX = mDrawPoint!!.drawText!!.scale
+            mRlContent!!.scaleY = mDrawPoint!!.drawText!!.scale
         }
         setLayoutParams()
     }
@@ -108,55 +112,31 @@ class DrawTextView(context: Context, drawPoint: DrawPoint?, callBackListener: Ca
         mBtTextEdit!!.setOnClickListener(this)
         mTvTextEdit!!.setOnClickListener(this)
         mTvTextEdit!!.setOnTouchListener(object : OnTouchListener {
-            var lastX = 0
-            var lastY = 0
-            override fun onTouch(view: View, event: MotionEvent): Boolean {
-                if (mDrawPoint!!.drawText!!.status == TEXT_DETAIL && OperationUtils.DISABLE) {
-                    val ea = event.action
-                    when (ea) {
-                        MotionEvent.ACTION_DOWN -> {
-                            // 获取触摸事件触摸位置的原始X坐标
-                            lastX = event.rawX.toInt()
-                            lastY = event.rawY.toInt()
-                        }
-
-                        MotionEvent.ACTION_MOVE -> {
-                            val dx = event.rawX.toInt() - lastX
-                            val dy = event.rawY.toInt() - lastY
-                            var left = mRlContent!!.left + dx
-                            var top = mRlContent!!.top + dy
-                            var right = mRlContent!!.right + dx
-                            var bottom = mRlContent!!.bottom + dy
-                            if (left < 0) {
-                                left = 0
-                                right = left + mRlContent!!.width
-                            }
-                            if (right > width) {
-                                right = width
-                                left = right - mRlContent!!.width
-                            }
-                            if (top < 0) {
-                                top = 0
-                                bottom = top + mRlContent!!.height
-                            }
-                            if (bottom > height) {
-                                bottom = height
-                                top = bottom - mRlContent!!.height
-                            }
-                            mDrawPoint!!.drawText!!.x = left.toFloat()
-                            mDrawPoint!!.drawText!!.y = top.toFloat()
-                            Log.e("移动", "-$left,$top")
-                            mRlContent!!.layout(left, top, right, bottom)
-                            lastX = event.rawX.toInt()
-                            lastY = event.rawY.toInt()
-                        }
-
-                        MotionEvent.ACTION_UP -> if (null != mCallBackListener) {
-                            mCallBackListener!!.onUpdate(mDrawPoint)
-                        }
+            private val multiTouchListener = MultiTouchListener(context, mRlContent, true, object : MultiTouchListener.OnGestureControl {
+                override fun onClick() {
+                    if (OperationUtils.DISABLE) {
+                        switchView(TEXT_DETAIL)
                     }
                 }
-                return false
+
+                override fun onLongClick() {}
+            })
+
+            override fun onTouch(view: View, event: MotionEvent): Boolean {
+                if (mDrawPoint!!.drawText!!.status == TEXT_DETAIL && OperationUtils.DISABLE) {
+                    multiTouchListener.onTouch(view, event)
+                    if (event.action == MotionEvent.ACTION_UP && mCallBackListener != null) {
+                        // Update position in DrawPoint
+                        val params = mRlContent!!.layoutParams as LayoutParams
+                        mDrawPoint!!.drawText!!.x = params.leftMargin + mRlContent!!.translationX
+                        mDrawPoint!!.drawText!!.y = params.topMargin + mRlContent!!.translationY
+                        mDrawPoint!!.drawText!!.rotation = mRlContent!!.rotation
+                        mDrawPoint!!.drawText!!.scale = mRlContent!!.scaleX
+                        mCallBackListener!!.onUpdate(mDrawPoint)
+                    }
+                    return true
+                }
+               return false
             }
         })
     }
@@ -247,8 +227,43 @@ class DrawTextView(context: Context, drawPoint: DrawPoint?, callBackListener: Ca
         Log.d("gpy", "要保存的文字：" + mEtTextEdit!!.text.toString())
         if (isSave) {
             mDrawPoint!!.drawText!!.str = mEtTextEdit!!.text.toString()
+            setText(mDrawPoint!!.drawText!!.str)
+
+            // Sanity check coordinates to prevent text disappearing off-screen
+            val display = (mContext as Activity?)!!.windowManager.defaultDisplay
+            val params = mRlContent!!.layoutParams as LayoutParams
+            var newX = params.leftMargin + mRlContent!!.translationX
+            var newY = params.topMargin + mRlContent!!.translationY
+
+            if (newX < 0 || newX > display.width) {
+                 newX = 100f // Reset to visible area
+                 mRlContent!!.translationX = 0f
+                 params.leftMargin = 100
+                 mRlContent!!.layoutParams = params
+            }
+             if (newY < 0 || newY > display.height) {
+                 newY = 100f
+                 mRlContent!!.translationY = 0f
+                 params.topMargin = 100
+                 mRlContent!!.layoutParams = params
+            }
+            
+            mDrawPoint!!.drawText!!.x = newX
+            mDrawPoint!!.drawText!!.y = newY
+            
+            // Do NOT call onUpdate here to avoid sending TEXT_EDIT status.
+            // switchView(TEXT_VIEW) will update status and trigger onUpdate.
         }
+        
+        val needUpdate = mDrawPoint!!.drawText!!.status == TEXT_VIEW && isSave
         switchView(TEXT_VIEW)
+        
+        // If status didn't change (was already TEXT_VIEW), switchView won't trigger update.
+        // We must ensure the new text/position is saved.
+        if (needUpdate && mCallBackListener != null) {
+            mCallBackListener!!.onUpdate(mDrawPoint)
+        }
+        
         hideSoftInput()
     }
 

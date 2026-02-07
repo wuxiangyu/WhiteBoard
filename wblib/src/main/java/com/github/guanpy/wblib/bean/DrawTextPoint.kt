@@ -67,5 +67,17 @@ data class DrawTextPoint(
      * 是否显示
      */
     @SerializedName("mIsVisible")
-    var isVisible: Boolean = false
+    var isVisible: Boolean = false,
+
+    /**
+     * 缩放比例
+     */
+    @SerializedName("mScale")
+    var scale: Float = 1.0f,
+
+    /**
+     * 旋转角度
+     */
+    @SerializedName("mRotation")
+    var rotation: Float = 0f
 )
