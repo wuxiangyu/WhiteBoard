@@ -107,7 +107,7 @@ object OperationUtils {
     /**
      * 初始化操作集
      */
-    fun init() {
+    fun init(keepPoints: Boolean = false) {
         DISABLE = true
         mCurrentIndex = 0
         markId = 0
@@ -119,7 +119,9 @@ object OperationUtils {
         mCurrentColor = WhiteBoardVariable.Color.ORANGE
         mCurrentPenSize = WhiteBoardVariable.PenSize.MIDDLE
         mCurrentEraserSize = WhiteBoardVariable.EraserSize.MIDDLE
-        initDrawPointList()
+        if (!keepPoints) {
+            initDrawPointList()
+        }
     }
 
     /**

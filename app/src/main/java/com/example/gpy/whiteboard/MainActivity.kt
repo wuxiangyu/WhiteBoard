@@ -30,8 +30,12 @@ class MainActivity : BaseActivity() {
         get() = R.layout.activity_main
 
     override fun afterCreate(savedInstanceState: Bundle?) {
-        loadData()
         initView()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        loadData()
     }
 
     private fun loadData() {
@@ -47,6 +51,9 @@ class MainActivity : BaseActivity() {
                 filenames!!.add(FileUtil.getFileName(f))
                 filepaths!!.add(f.absolutePath)
             }
+        }
+        if (::mWbAdapter.isInitialized) {
+            mWbAdapter.notifyDataSetChanged()
         }
     }
 
@@ -99,10 +106,12 @@ class MainActivity : BaseActivity() {
             }
             if (holder != null) {
                 holder.nWbName.text = filenames!![position]
-                view!!.setOnClickListener {
-                    StoreUtil.readWhiteBoardPoints(filepaths!![position])
-                    navi2Page(WhiteBoardActivity::class.java)
-                }
+                    view!!.setOnClickListener {
+                        StoreUtil.readWhiteBoardPoints(filepaths!![position])
+                        val bundle = Bundle()
+                        bundle.putBoolean("KEEP_POINTS", true)
+                        navi2Page(WhiteBoardActivity::class.java, bundle, false)
+                    }
             }
             return view!!
         }

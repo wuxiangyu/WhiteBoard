@@ -124,8 +124,13 @@ class WhiteBoardActivity : BaseActivity(), View.OnClickListener {
         mLlWhiteBoardNext = findViewById(R.id.ll_white_board_next)
         
         mDtView.init(this)
-        mDtView.visibility = View.GONE // Debugging: Hide text layer to test pen layer
-        OperationUtils.init() // Ensure defaults (DISABLE=true)
+        mDtView.init(this)
+        val keepPoints = intent.getBooleanExtra("KEEP_POINTS", false)
+        OperationUtils.init(keepPoints) // Ensure defaults (DISABLE=true)
+        if (keepPoints) {
+            // Do not disable drawing.
+            // OperationUtils.DISABLE = true // already set in init()
+        }
         changePenBack()
         changeColorBack()
         changeEraserBack()
@@ -778,5 +783,12 @@ class WhiteBoardActivity : BaseActivity(), View.OnClickListener {
         } else {
             mIvWhiteBoardRedo.visibility = View.VISIBLE
         }
+    }
+
+    override fun dispatchTouchEvent(ev: android.view.MotionEvent): Boolean {
+        if (ev.action == android.view.MotionEvent.ACTION_DOWN) {
+             android.util.Log.e("WhiteBoardActivity", "dispatchTouchEvent: ACTION_DOWN")
+        }
+        return super.dispatchTouchEvent(ev)
     }
 }

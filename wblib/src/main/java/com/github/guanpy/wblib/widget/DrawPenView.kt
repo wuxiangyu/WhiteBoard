@@ -143,6 +143,7 @@ class DrawPenView : View {
         if (w > 0 && h > 0) {
             mBottomBitmap = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888)
             mCanvas = Canvas(mBottomBitmap!!)
+            showPoints()
         }
     }
 
@@ -277,5 +278,12 @@ class DrawPenView : View {
             }
         }
         postInvalidate()
+    }
+
+    override fun dispatchTouchEvent(event: MotionEvent): Boolean {
+        Log.e("DrawPenView", "dispatchTouchEvent: " + event.action + ", Clickable=" + isClickable)
+        val result = super.dispatchTouchEvent(event)
+        Log.e("DrawPenView", "dispatchTouchEvent result: " + result)
+        return result
     }
 }

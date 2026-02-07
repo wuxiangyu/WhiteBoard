@@ -104,14 +104,7 @@
         android:layout_marginBottom="24dp"
         android:layout_marginLeft="24dp"
         android:layout_marginRight="24dp">
-        <ScrollView
-            android:id="@+id/sv_content"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:fillViewport="true"
-            android:fadingEdge="none"
-            android:scrollbars="none"
-            >
+
         <FrameLayout
             android:id="@+id/fl_view"
             android:layout_width="match_parent"
@@ -133,7 +126,7 @@
                 android:focusable="false"
                 />
         </FrameLayout>
-        </ScrollView>
+
         <RelativeLayout
             android:id="@+id/rl_bottom"
             android:layout_width="match_parent"

@@ -46,6 +46,13 @@ class DrawTextLayout : FrameLayout {
         showPoints()
     }
 
+    override fun dispatchTouchEvent(ev: MotionEvent): Boolean {
+        Log.e("DrawTextLayout", "dispatchTouchEvent: " + ev.action)
+        val result = super.dispatchTouchEvent(ev)
+        Log.e("DrawTextLayout", "dispatchTouchEvent result: " + result)
+        return result
+    }
+
     override fun onTouchEvent(event: MotionEvent): Boolean {
         Log.e("DrawTextLayout", "onTouchEvent: action=${event.action}, Type=${OperationUtils.mCurrentDrawType}")
         if (OperationUtils.mCurrentDrawType == OperationUtils.DRAW_TEXT && OperationUtils.DISABLE) {
