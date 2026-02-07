@@ -122,13 +122,15 @@
             <com.github.guanpy.wblib.widget.DrawPenView
                 android:id="@+id/db_view"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                  />
 
             <com.github.guanpy.wblib.widget.DrawTextLayout
                 android:id="@+id/dt_view"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:clickable="false"
+                android:focusable="false"
                 />
         </FrameLayout>
         </ScrollView>
