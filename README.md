@@ -1,6 +1,6 @@
 # WhiteBoard
 fork form guanpy/WhiteBoard  现在重新用'gradle:8.3.0' 编译通过
-
+另外将此项目改造成kotlin 项目 希望能帮助到大家
 
 - 1、涂鸦功能：包括画笔粗细选择、颜色选择、橡皮擦等；
 - 2、文字输入：包括颜色选择、增、删、改等；
