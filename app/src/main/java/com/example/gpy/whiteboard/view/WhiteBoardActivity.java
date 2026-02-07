@@ -30,96 +30,54 @@ import com.github.guanpy.wblib.widget.DrawTextView;
 import java.io.File;
 import java.io.FileOutputStream;
 
-import butterknife.InjectView;
+
 
 /**
  * 白板工具
  * Created by gpy on 2015/6/2.
  */
 public class WhiteBoardActivity extends BaseActivity implements View.OnClickListener {
-    @InjectView(R.id.iv_white_board_book)
     ImageView mIvWhiteBoardBook;
-    @InjectView(R.id.rl_head)
     RelativeLayout mRlHead;
-    @InjectView(R.id.iv_white_board_back)
     ImageView mIvWhiteBoardBack;
-    @InjectView(R.id.tv_white_board_head)
     TextView mTvWhiteBoardHead;
-    @InjectView(R.id.iv_white_board_export)
     ImageView mIvWhiteBoardExport;
-    @InjectView(R.id.iv_white_board_save)
     ImageView mIvWhiteBoardSave;
-    @InjectView(R.id.fl_view)
     FrameLayout mFlView;
-    @InjectView(R.id.db_view)
     DrawPenView mDbView;
-    @InjectView(R.id.dt_view)
     DrawTextLayout mDtView;
-    @InjectView(R.id.fab_menu_size)
     FloatingActionsMenu mFabMenuSize;
-    @InjectView(R.id.bt_size_large)
     FloatingImageButton mBtSizeLarge;
-    @InjectView(R.id.bt_size_middle)
     FloatingImageButton mBtSizeMiddle;
-    @InjectView(R.id.bt_size_mini)
     FloatingImageButton mBtSizeMini;
-    @InjectView(R.id.fab_menu_color)
     FloatingActionsMenu mFabMenuColor;
-    @InjectView(R.id.bt_color_green)
     FloatingImageButton mBtColorGreen;
-    @InjectView(R.id.bt_color_purple)
     FloatingImageButton mBtColorPurple;
-    @InjectView(R.id.bt_color_pink)
     FloatingImageButton mBtColorPink;
-    @InjectView(R.id.bt_color_orange)
     FloatingImageButton mBtColorOrange;
-    @InjectView(R.id.bt_color_black)
     FloatingImageButton mBtColorBlack;
-    @InjectView(R.id.fab_menu_text)
     FloatingActionsMenu mFabMenuText;
-    @InjectView(R.id.bt_text_underline)
     FloatingImageButton mBtTextUnderline;
-    @InjectView(R.id.bt_text_italics)
     FloatingImageButton mBtTextItalics;
-    @InjectView(R.id.bt_text_bold)
     FloatingImageButton mBtTextBold;
-    @InjectView(R.id.fab_menu_eraser)
     FloatingActionsMenu mFabMenuEraser;
-    @InjectView(R.id.bt_eraser_large)
     FloatingImageButton mBtEraserLarge;
-    @InjectView(R.id.bt_eraser_middle)
     FloatingImageButton mBtEraserMiddle;
-    @InjectView(R.id.bt_eraser_mini)
     FloatingImageButton mBtEraserMini;
-    @InjectView(R.id.iv_white_board_undo)
     ImageView mIvWhiteBoardUndo;
-    @InjectView(R.id.iv_white_board_redo)
     ImageView mIvWhiteBoardRedo;
-    @InjectView(R.id.ll_white_board_page)
     LinearLayout mLlWhiteBoardPage;
-    @InjectView(R.id.iv_white_board_pre)
     ImageView mIvWhiteBoardPre;
-    @InjectView(R.id.tv_white_board_page)
     TextView mTvWhiteBoardPage;
-    @InjectView(R.id.iv_white_board_next)
     ImageView mIvWhiteBoardNext;
-    @InjectView(R.id.iv_white_board_add)
     ImageView mIvWhiteBoardAdd;
-    @InjectView(R.id.iv_white_board_disable)
     ImageView mIvWhiteBoardDisable;
-    @InjectView(R.id.iv_white_board_quit)
     ImageView mIvWhiteBoardQuit;
-    @InjectView(R.id.iv_white_board_confirm)
     ImageView mIvWhiteBoardConfirm;
-    @InjectView(R.id.rl_content)
     RelativeLayout mRlContent;
-    @InjectView(R.id.rl_bottom)
     RelativeLayout mRlBottom;
-    @InjectView(R.id.v_bottom_back)
     View mVBottomBack;
-    @InjectView(R.id.ll_white_board_pre)
     LinearLayout mLlWhiteBoardPre;
-    @InjectView(R.id.ll_white_board_next)
     LinearLayout mLlWhiteBoardNext;
 
 
@@ -132,6 +90,48 @@ public class WhiteBoardActivity extends BaseActivity implements View.OnClickList
 
     }
     private void initView() {
+        mIvWhiteBoardBook = findViewById(R.id.iv_white_board_book);
+        mRlHead = findViewById(R.id.rl_head);
+        mIvWhiteBoardBack = findViewById(R.id.iv_white_board_back);
+        mTvWhiteBoardHead = findViewById(R.id.tv_white_board_head);
+        mIvWhiteBoardExport = findViewById(R.id.iv_white_board_export);
+        mIvWhiteBoardSave = findViewById(R.id.iv_white_board_save);
+        mFlView = findViewById(R.id.fl_view);
+        mDbView = findViewById(R.id.db_view);
+        mDtView = findViewById(R.id.dt_view);
+        mFabMenuSize = findViewById(R.id.fab_menu_size);
+        mBtSizeLarge = findViewById(R.id.bt_size_large);
+        mBtSizeMiddle = findViewById(R.id.bt_size_middle);
+        mBtSizeMini = findViewById(R.id.bt_size_mini);
+        mFabMenuColor = findViewById(R.id.fab_menu_color);
+        mBtColorGreen = findViewById(R.id.bt_color_green);
+        mBtColorPurple = findViewById(R.id.bt_color_purple);
+        mBtColorPink = findViewById(R.id.bt_color_pink);
+        mBtColorOrange = findViewById(R.id.bt_color_orange);
+        mBtColorBlack = findViewById(R.id.bt_color_black);
+        mFabMenuText = findViewById(R.id.fab_menu_text);
+        mBtTextUnderline = findViewById(R.id.bt_text_underline);
+        mBtTextItalics = findViewById(R.id.bt_text_italics);
+        mBtTextBold = findViewById(R.id.bt_text_bold);
+        mFabMenuEraser = findViewById(R.id.fab_menu_eraser);
+        mBtEraserLarge = findViewById(R.id.bt_eraser_large);
+        mBtEraserMiddle = findViewById(R.id.bt_eraser_middle);
+        mBtEraserMini = findViewById(R.id.bt_eraser_mini);
+        mIvWhiteBoardUndo = findViewById(R.id.iv_white_board_undo);
+        mIvWhiteBoardRedo = findViewById(R.id.iv_white_board_redo);
+        mLlWhiteBoardPage = findViewById(R.id.ll_white_board_page);
+        mIvWhiteBoardPre = findViewById(R.id.iv_white_board_pre);
+        mTvWhiteBoardPage = findViewById(R.id.tv_white_board_page);
+        mIvWhiteBoardNext = findViewById(R.id.iv_white_board_next);
+        mIvWhiteBoardAdd = findViewById(R.id.iv_white_board_add);
+        mIvWhiteBoardDisable = findViewById(R.id.iv_white_board_disable);
+        mIvWhiteBoardQuit = findViewById(R.id.iv_white_board_quit);
+        mIvWhiteBoardConfirm = findViewById(R.id.iv_white_board_confirm);
+        mRlContent = findViewById(R.id.rl_content);
+        mRlBottom = findViewById(R.id.rl_bottom);
+        mVBottomBack = findViewById(R.id.v_bottom_back);
+        mLlWhiteBoardPre = findViewById(R.id.ll_white_board_pre);
+        mLlWhiteBoardNext = findViewById(R.id.ll_white_board_next);
         changePenBack();
         changeColorBack();
         changeEraserBack();
@@ -209,112 +209,79 @@ public class WhiteBoardActivity extends BaseActivity implements View.OnClickList
 
     @Override
     public void onClick(View view) {
-        switch (view.getId()) {
-            case R.id.iv_white_board_back://返回键
-                onBackPressed();
-                break;
-            case R.id.iv_white_board_quit://退出文字编辑
-                afterEdit(false);
-                break;
-            case R.id.iv_white_board_confirm://保存文字编辑
-                afterEdit(true);
-                break;
-            case R.id.iv_white_board_export://保存白板操作集到本地
-                ToolsOperation(WhiteBoardVariable.Operation.OUTSIDE_CLICK);
-                StoreUtil.saveWhiteBoardPoints();
-                break;
-            case R.id.iv_white_board_save://保存白板为图片
-                ToolsOperation(WhiteBoardVariable.Operation.OUTSIDE_CLICK);
-                saveImage();
-                break;
-            case R.id.v_bottom_back://点击挡板
-                ToolsOperation(WhiteBoardVariable.Operation.OUTSIDE_CLICK);
-                break;
-            case R.id.bt_size_large://设置画笔尺寸-大号
-                setPenSize(WhiteBoardVariable.PenSize.LARRGE);
-                break;
-            case R.id.bt_size_middle://设置画笔尺寸-中号
-                setPenSize(WhiteBoardVariable.PenSize.MIDDLE);
-                break;
-            case R.id.bt_size_mini://设置画笔尺寸-小号
-                setPenSize(WhiteBoardVariable.PenSize.MINI);
-                break;
-
-            case R.id.bt_color_green://设置颜色-绿色
-                setColor(WhiteBoardVariable.Color.GREEN);
-                break;
-            case R.id.bt_color_purple://设置颜色-紫色
-                setColor(WhiteBoardVariable.Color.PURPLE);
-                break;
-            case R.id.bt_color_pink://设置颜色-粉色
-                setColor(WhiteBoardVariable.Color.PINK);
-                break;
-            case R.id.bt_color_orange://设置颜色-橙色
-                setColor(WhiteBoardVariable.Color.ORANGE);
-                break;
-            case R.id.bt_color_black://设置颜色-黑色
-                setColor(WhiteBoardVariable.Color.BLACK);
-                break;
-
-            case R.id.bt_text_underline://设置文字样式-下划线
-                setTextStyle(WhiteBoardVariable.TextStyle.CHANGE_UNDERLINE);
-                break;
-            case R.id.bt_text_italics://设置文字样式-斜体
-                setTextStyle(WhiteBoardVariable.TextStyle.CHANGE_ITALICS);
-                break;
-            case R.id.bt_text_bold://设置文字样式-粗体
-                setTextStyle(WhiteBoardVariable.TextStyle.CHANGE_BOLD);
-                break;
-
-            case R.id.bt_eraser_large://设置橡皮擦尺寸-大号
-                setEraserSize(WhiteBoardVariable.EraserSize.LARRGE);
-                break;
-            case R.id.bt_eraser_middle://设置橡皮擦尺寸-中号
-                setEraserSize(WhiteBoardVariable.EraserSize.MIDDLE);
-                break;
-            case R.id.bt_eraser_mini://设置橡皮擦尺寸-小号
-                setEraserSize(WhiteBoardVariable.EraserSize.MINI);
-                break;
-
-            case R.id.iv_white_board_undo://撤销
-                ToolsOperation(WhiteBoardVariable.Operation.OUTSIDE_CLICK);
-                if (OperationUtils.getInstance().DISABLE) {
-                    undo();
-                }
-                break;
-            case R.id.iv_white_board_redo://重做
-                ToolsOperation(WhiteBoardVariable.Operation.OUTSIDE_CLICK);
-                if (OperationUtils.getInstance().DISABLE) {
-                    redo();
-                }
-                break;
-            case R.id.ll_white_board_pre:
-            case R.id.iv_white_board_pre://上一页
-                ToolsOperation(WhiteBoardVariable.Operation.OUTSIDE_CLICK);
-                prePage();
-                break;
-            case R.id.ll_white_board_next:
-            case R.id.iv_white_board_next://下一页
-                ToolsOperation(WhiteBoardVariable.Operation.OUTSIDE_CLICK);
-                nextPage();
-                break;
-            case R.id.iv_white_board_add://新建白板
-                ToolsOperation(WhiteBoardVariable.Operation.OUTSIDE_CLICK);
-                newPage();
-                break;
-            case R.id.iv_white_board_disable://禁止/解禁按钮
-                ToolsOperation(WhiteBoardVariable.Operation.OUTSIDE_CLICK);
-                if (OperationUtils.getInstance().DISABLE) {
-                    OperationUtils.getInstance().DISABLE = false;
-                    mIvWhiteBoardDisable.setImageResource(R.drawable.white_board_undisable_selector);
-                    mRlBottom.setVisibility(View.GONE);
-                } else {
-                    OperationUtils.getInstance().DISABLE = true;
-                    mIvWhiteBoardDisable.setImageResource(R.drawable.white_board_disable_selector);
-                    mRlBottom.setVisibility(View.VISIBLE);
-                }
-                break;
-
+        int id = view.getId();
+        if (id == R.id.iv_white_board_back) {
+            onBackPressed();
+        } else if (id == R.id.iv_white_board_quit) {
+            afterEdit(false);
+        } else if (id == R.id.iv_white_board_confirm) {
+            afterEdit(true);
+        } else if (id == R.id.iv_white_board_export) {
+            ToolsOperation(WhiteBoardVariable.Operation.OUTSIDE_CLICK);
+            StoreUtil.saveWhiteBoardPoints();
+        } else if (id == R.id.iv_white_board_save) {
+            ToolsOperation(WhiteBoardVariable.Operation.OUTSIDE_CLICK);
+            saveImage();
+        } else if (id == R.id.v_bottom_back) {
+            ToolsOperation(WhiteBoardVariable.Operation.OUTSIDE_CLICK);
+        } else if (id == R.id.bt_size_large) {
+            setPenSize(WhiteBoardVariable.PenSize.LARRGE);
+        } else if (id == R.id.bt_size_middle) {
+            setPenSize(WhiteBoardVariable.PenSize.MIDDLE);
+        } else if (id == R.id.bt_size_mini) {
+            setPenSize(WhiteBoardVariable.PenSize.MINI);
+        } else if (id == R.id.bt_color_green) {
+            setColor(WhiteBoardVariable.Color.GREEN);
+        } else if (id == R.id.bt_color_purple) {
+            setColor(WhiteBoardVariable.Color.PURPLE);
+        } else if (id == R.id.bt_color_pink) {
+            setColor(WhiteBoardVariable.Color.PINK);
+        } else if (id == R.id.bt_color_orange) {
+            setColor(WhiteBoardVariable.Color.ORANGE);
+        } else if (id == R.id.bt_color_black) {
+            setColor(WhiteBoardVariable.Color.BLACK);
+        } else if (id == R.id.bt_text_underline) {
+            setTextStyle(WhiteBoardVariable.TextStyle.CHANGE_UNDERLINE);
+        } else if (id == R.id.bt_text_italics) {
+            setTextStyle(WhiteBoardVariable.TextStyle.CHANGE_ITALICS);
+        } else if (id == R.id.bt_text_bold) {
+            setTextStyle(WhiteBoardVariable.TextStyle.CHANGE_BOLD);
+        } else if (id == R.id.bt_eraser_large) {
+            setEraserSize(WhiteBoardVariable.EraserSize.LARRGE);
+        } else if (id == R.id.bt_eraser_middle) {
+            setEraserSize(WhiteBoardVariable.EraserSize.MIDDLE);
+        } else if (id == R.id.bt_eraser_mini) {
+             setEraserSize(WhiteBoardVariable.EraserSize.MINI);
+        } else if (id == R.id.iv_white_board_undo) {
+            ToolsOperation(WhiteBoardVariable.Operation.OUTSIDE_CLICK);
+            if (OperationUtils.getInstance().DISABLE) {
+                undo();
+            }
+        } else if (id == R.id.iv_white_board_redo) {
+            ToolsOperation(WhiteBoardVariable.Operation.OUTSIDE_CLICK);
+            if (OperationUtils.getInstance().DISABLE) {
+                redo();
+            }
+        } else if (id == R.id.ll_white_board_pre || id == R.id.iv_white_board_pre) {
+            ToolsOperation(WhiteBoardVariable.Operation.OUTSIDE_CLICK);
+            prePage();
+        } else if (id == R.id.ll_white_board_next || id == R.id.iv_white_board_next) {
+            ToolsOperation(WhiteBoardVariable.Operation.OUTSIDE_CLICK);
+            nextPage();
+        } else if (id == R.id.iv_white_board_add) {
+            ToolsOperation(WhiteBoardVariable.Operation.OUTSIDE_CLICK);
+            newPage();
+        } else if (id == R.id.iv_white_board_disable) {
+            ToolsOperation(WhiteBoardVariable.Operation.OUTSIDE_CLICK);
+            if (OperationUtils.getInstance().DISABLE) {
+                OperationUtils.getInstance().DISABLE = false;
+                mIvWhiteBoardDisable.setImageResource(R.drawable.white_board_undisable_selector);
+                mRlBottom.setVisibility(View.GONE);
+            } else {
+                OperationUtils.getInstance().DISABLE = true;
+                mIvWhiteBoardDisable.setImageResource(R.drawable.white_board_disable_selector);
+                mRlBottom.setVisibility(View.VISIBLE);
+            }
         }
     }
 

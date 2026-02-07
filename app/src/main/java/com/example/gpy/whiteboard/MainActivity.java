@@ -19,13 +19,11 @@ import com.github.guanpy.wblib.utils.OperationUtils;
 import java.io.File;
 import java.util.ArrayList;
 
-import butterknife.InjectView;
+
 
 public class MainActivity extends BaseActivity {
 
-    @InjectView(R.id.lv_wb)
     ListView mLv;
-    @InjectView(R.id.iv_wb_add)
     ImageView mIvAdd;
 
 
@@ -50,7 +48,7 @@ public class MainActivity extends BaseActivity {
             folder.mkdirs();
         }
         final File[] files = folder.listFiles();
-        if (files.length > 0) {
+        if (files != null && files.length > 0) {
             filenames = new ArrayList<String>();
             filepaths = new ArrayList<String>();
             for (File f : files) {
@@ -63,6 +61,8 @@ public class MainActivity extends BaseActivity {
     }
 
     private void initView() {
+        mLv = (ListView) findViewById(R.id.lv_wb);
+        mIvAdd = (ImageView) findViewById(R.id.iv_wb_add);
         mWbAdapter = new WbAdapter();
         mLv.setAdapter(mWbAdapter);
         mIvAdd.setOnClickListener(new View.OnClickListener() {

@@ -1,5 +1,6 @@
 package com.example.gpy.whiteboard.utils;
 
+import android.content.Context;
 import android.os.Environment;
 
 import java.io.File;
@@ -29,12 +30,14 @@ public class SdCardStatus {
      * @return
      */
     public static String getSDPath() {
-        boolean sdCardExist = Environment.getExternalStorageState().equals(
-                Environment.MEDIA_MOUNTED);
-        if (sdCardExist) {
-            return Environment.getExternalStorageDirectory().getAbsolutePath();
-        } else {
-                return null;
+        Context context = com.github.guanpy.wblib.utils.AppContextUtil.getContext();
+        if (context == null) {
+             return null;
         }
+        File externalFilesDir = context.getExternalFilesDir(null);
+        if (externalFilesDir != null) {
+            return externalFilesDir.getAbsolutePath();
+        }
+        return null;
     }
 }
