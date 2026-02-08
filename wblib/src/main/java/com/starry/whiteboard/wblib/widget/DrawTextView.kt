@@ -105,7 +105,7 @@ class DrawTextView(context: Context, drawPoint: DrawPoint?, callBackListener: Ca
      * @author : gpy
      */
     private fun initEvent() {
-        mVOutside!!.setOnClickListener(this)
+        // mVOutside!!.setOnClickListener(this) // Removed global listener, managed in switchView
         // mRlText!!.setOnClickListener(this) // Removed to prevent blocking touches
         mEtTextEdit!!.setOnClickListener(this)
         mBtTextDelete!!.setOnClickListener(this)
@@ -183,6 +183,8 @@ class DrawTextView(context: Context, drawPoint: DrawPoint?, callBackListener: Ca
             TEXT_EDIT -> {
                 mVOutside!!.setBackgroundResource(R.color.white)
                 mVOutside!!.visibility = VISIBLE
+                mVOutside!!.setOnClickListener(this) // Enable blocking for Edit mode
+                mVOutside!!.isClickable = true
                 mEtTextEdit!!.visibility = VISIBLE
                 mTvTextEdit!!.visibility = GONE
                 mRlText!!.setBackgroundResource(R.drawable.draw_text_border)
@@ -196,6 +198,8 @@ class DrawTextView(context: Context, drawPoint: DrawPoint?, callBackListener: Ca
             TEXT_DETAIL -> {
                 mVOutside!!.setBackgroundResource(R.color.transparent)
                 mVOutside!!.visibility = VISIBLE
+                mVOutside!!.setOnClickListener(null) // Disable blocking for Detail mode
+                mVOutside!!.isClickable = false
                 mEtTextEdit!!.visibility = GONE
                 mTvTextEdit!!.visibility = VISIBLE
                 mRlText!!.setBackgroundResource(R.drawable.draw_text_border)

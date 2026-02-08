@@ -80,7 +80,7 @@ class DrawEmojiView(context: Context, drawPoint: DrawPoint?, callBackListener: C
     }
 
     private fun initEvent() {
-        mVOutside!!.setOnClickListener(this)
+        // mVOutside!!.setOnClickListener(this) // Removed to allow pass-through
         mBtDelete!!.setOnClickListener(this)
         mBtEdit!!.setOnClickListener(this)
         mTvEmoji!!.setOnClickListener(this)

@@ -43,6 +43,9 @@ class DrawTextLayout : FrameLayout {
         if (OperationUtils.mCurrentDrawType == OperationUtils.DRAW_TEXT && OperationUtils.DISABLE) {
             when (event.action) {
                 MotionEvent.ACTION_DOWN -> {
+                    OperationUtils.deselectAllItems()
+                    // EventBus.postEvent(Events.WHITE_BOARD_REFRESH) // Not strictly needed as showPoints() matches logic, but good for consistency
+
                     var moveX = event.x
                     var moveY = event.y
                     if (height - moveY < dip2px(MARGIN_BOTTOM.toFloat())) {

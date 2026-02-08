@@ -177,6 +177,10 @@ class DrawPenView : View {
 
             when (event.action) {
                 MotionEvent.ACTION_DOWN -> {
+                    // Deselect any selected items (Emoji, Text) when starting to draw or clicking background
+                    OperationUtils.deselectAllItems()
+                    EventBus.postEvent(Events.WHITE_BOARD_REFRESH)
+
                     mPath = Path()
                     mDrawPath = DrawPoint()
                     mPath!!.moveTo(x, y)
