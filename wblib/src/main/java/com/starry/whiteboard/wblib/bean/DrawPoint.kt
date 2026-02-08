@@ -24,6 +24,10 @@ class DrawPoint {
     @SerializedName("mDrawEmoji")
     var drawEmoji: DrawEmojiPoint? = null
 
+    /**图片 */
+    @SerializedName("mDrawImage")
+    var drawImage: DrawImagePoint? = null
+
     companion object {
         /**
          * 拷贝数据，防止引用传递 <br></br>
@@ -42,6 +46,9 @@ class DrawPoint {
                 }
                 if (drawPoint.drawEmoji != null) {
                     dp.drawEmoji = drawPoint.drawEmoji!!.copy()
+                }
+                if (drawPoint.drawImage != null) {
+                    dp.drawImage = drawPoint.drawImage!!.copy()
                 }
             } catch (e: Exception) {
                 e.printStackTrace()

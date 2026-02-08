@@ -27,6 +27,12 @@ import com.starry.whiteboard.wblib.bean.DrawEmojiPoint
 import com.starry.whiteboard.wblib.bean.DrawPoint
 import com.starry.whiteboard.wblib.widget.DrawEmojiLayout
 import com.starry.whiteboard.wblib.widget.DrawEmojiView
+import com.starry.whiteboard.wblib.bean.DrawImagePoint
+import com.starry.whiteboard.wblib.widget.DrawImageLayout
+import com.starry.whiteboard.wblib.widget.DrawImageView
+import android.provider.MediaStore
+import android.database.Cursor
+import com.starry.whiteboard.utils.FileUtil
 
 /**
  * 白板工具
@@ -44,6 +50,8 @@ class WhiteBoardActivity : BaseActivity(), View.OnClickListener, EmojiBSFragment
     private lateinit var mDbView: DrawPenView
     private lateinit var mDeView: DrawEmojiLayout
     private lateinit var mDtView: DrawTextLayout
+    private lateinit var mDiView: DrawImageLayout
+    private lateinit var mIvWhiteBoardImage: ImageView
     private lateinit var mFabMenuSize: FloatingActionsMenu
     private lateinit var mBtSizeLarge: FloatingImageButton
     private lateinit var mBtSizeMiddle: FloatingImageButton
@@ -139,8 +147,14 @@ class WhiteBoardActivity : BaseActivity(), View.OnClickListener, EmojiBSFragment
         
         mDtView.init()
         mDeView.init() // keep existing init if it was there? No, looking at initView: mDeView = findViewById...
+        mDeView.init()
         mDeView.setOnEmojiActionListener(this)
         mDtView.init()
+        mDiView = findViewById(R.id.di_view_img)
+        mIvWhiteBoardImage = findViewById(R.id.iv_white_board_image)
+        mDiView.init()
+        mIvWhiteBoardImage.setOnClickListener(this)
+
         val keepPoints = intent.getBooleanExtra("KEEP_POINTS", false)
         OperationUtils.init(keepPoints) // Ensure defaults (DISABLE=true)
         if (keepPoints) {
@@ -227,6 +241,10 @@ class WhiteBoardActivity : BaseActivity(), View.OnClickListener, EmojiBSFragment
         } else if (id == R.id.iv_white_board_export) {
             toolsOperation(WhiteBoardVariable.Operation.OUTSIDE_CLICK)
             StoreUtil.saveWhiteBoardPoints()
+        } else if (id == R.id.iv_white_board_image) {
+            toolsOperation(WhiteBoardVariable.Operation.OUTSIDE_CLICK)
+            val intent = Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+            startActivityForResult(intent, REQUEST_CODE_PICK_IMAGE)
         } else if (id == R.id.iv_white_board_save) {
             toolsOperation(WhiteBoardVariable.Operation.OUTSIDE_CLICK)
             saveImage()
@@ -293,6 +311,62 @@ class WhiteBoardActivity : BaseActivity(), View.OnClickListener, EmojiBSFragment
                 OperationUtils.DISABLE = true
                 mIvWhiteBoardDisable.setImageResource(R.drawable.white_board_disable_selector)
                 mRlBottom.visibility = View.VISIBLE
+            }
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == REQUEST_CODE_PICK_IMAGE && resultCode == RESULT_OK && data != null) {
+            val selectedImageUri: Uri? = data.data
+            if (selectedImageUri != null) {
+                try {
+                    // Copy image to cache directory to ensure access
+                    val cacheFile = File(externalCacheDir, "image_${System.currentTimeMillis()}.png")
+                    val inputStream = contentResolver.openInputStream(selectedImageUri)
+                    val outputStream = FileOutputStream(cacheFile)
+                    inputStream?.copyTo(outputStream)
+                    inputStream?.close()
+                    outputStream.close()
+                    
+                    val picturePath = cacheFile.absolutePath
+
+                    // Add image to whiteboard
+                    val drawPoint = DrawPoint()
+                    drawPoint.type = OperationUtils.DRAW_IMAGE
+                    val drawImagePoint = DrawImagePoint()
+                    drawImagePoint.id = OperationUtils.newMarkId
+                    drawImagePoint.x = 200f
+                    drawImagePoint.y = 200f
+                    drawImagePoint.imagePath = picturePath
+                    
+                    // Decode bounds to get dimensions
+                    val options = android.graphics.BitmapFactory.Options()
+                    options.inJustDecodeBounds = true
+                    android.graphics.BitmapFactory.decodeFile(picturePath, options)
+                    drawImagePoint.width = options.outWidth
+                    drawImagePoint.height = options.outHeight
+                    
+                    // Simple validation for reasonable default size if decode fails
+                    if (drawImagePoint.width <= 0) drawImagePoint.width = 400
+                    if (drawImagePoint.height <= 0) drawImagePoint.height = 400
+
+                    drawPoint.drawImage = drawImagePoint
+                    
+                    OperationUtils.savePoints.add(drawPoint)
+                    OperationUtils.deletePoints.clear() // Clear redo history
+                    mDiView.showPoints()
+                    
+                    // Switch to View Mode to allow manipulation
+                    if (!OperationUtils.DISABLE) {
+                        OperationUtils.DISABLE = true
+                        mIvWhiteBoardDisable.setImageResource(R.drawable.white_board_disable_selector)
+                        mRlBottom.visibility = View.VISIBLE
+                    }
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                    Toast.makeText(this, "Error loading image", Toast.LENGTH_SHORT).show()
+                }
             }
         }
     }
@@ -455,11 +529,11 @@ class WhiteBoardActivity : BaseActivity(), View.OnClickListener, EmojiBSFragment
         mDbView.showPoints()
         mDeView.showPoints()
         mDtView.showPoints()
+        mDiView.showPoints()
         mTvWhiteBoardPage.text = "" + (OperationUtils.mCurrentIndex + 1) + "/" + OperationUtils.drawPointSize
         showPage()
         showUndoRedo()
     }
-
     /**
      * 显示上下页是否可点击
      */
@@ -493,14 +567,13 @@ class WhiteBoardActivity : BaseActivity(), View.OnClickListener, EmojiBSFragment
                 mDtView.undo()
             } else if (OperationUtils.deletePoints[delSize - 1].type == OperationUtils.DRAW_EMOJI) {
                 mDeView.undo()
+            } else if (OperationUtils.deletePoints[delSize - 1].type == OperationUtils.DRAW_IMAGE) {
+                mDiView.undo()
             }
             showUndoRedo()
         }
     }
 
-    /**
-     * 重做
-     */
     private fun redo() {
         val size = OperationUtils.deletePoints.size
         if (size == 0) {
@@ -515,6 +588,8 @@ class WhiteBoardActivity : BaseActivity(), View.OnClickListener, EmojiBSFragment
                 mDtView.redo()
             } else if (OperationUtils.savePoints[saveSize - 1].type == OperationUtils.DRAW_EMOJI) {
                 mDeView.redo()
+            } else if (OperationUtils.savePoints[saveSize - 1].type == OperationUtils.DRAW_IMAGE) {
+                mDiView.redo()
             }
             showUndoRedo()
         }
@@ -611,6 +686,12 @@ class WhiteBoardActivity : BaseActivity(), View.OnClickListener, EmojiBSFragment
                     OperationUtils.mCurrentOPerationPen = WhiteBoardVariable.Operation.PEN_CLICK
                 }
             }
+        }
+        
+        // Also ensure any selected image is deselected when clicking tools
+        if (currentOperation != WhiteBoardVariable.Operation.OUTSIDE_CLICK) {
+            OperationUtils.deselectAllItems()
+            mDiView.showPoints()
         }
     }
 
@@ -844,5 +925,9 @@ class WhiteBoardActivity : BaseActivity(), View.OnClickListener, EmojiBSFragment
         val emojiBSFragment = EmojiBSFragment()
         emojiBSFragment.setEmojiListener(this)
         emojiBSFragment.show(supportFragmentManager, emojiBSFragment.tag)
+    }
+
+    companion object {
+        const val REQUEST_CODE_PICK_IMAGE = 100
     }
 }

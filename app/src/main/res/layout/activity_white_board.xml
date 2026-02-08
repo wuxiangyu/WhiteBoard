@@ -118,6 +118,14 @@
                 android:layout_height="match_parent"
                  />
 
+            <com.starry.whiteboard.wblib.widget.DrawImageLayout
+                android:id="@+id/di_view_img"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:clickable="false"
+                android:focusable="false"
+                />
+
             <com.starry.whiteboard.wblib.widget.DrawEmojiLayout
                 android:id="@+id/de_view"
                 android:layout_width="match_parent"
@@ -233,6 +241,19 @@
 
             </com.starry.whiteboard.view.widget.floatingactionmenu.FloatingActionsMenu>
 
+            <ImageView
+                android:id="@+id/iv_white_board_image"
+                android:layout_width="44dp"
+                android:layout_height="44dp"
+                android:layout_alignParentBottom="true"
+                android:layout_gravity="center_vertical"
+                android:layout_marginBottom="16dp"
+                android:layout_marginLeft="12dp"
+                android:layout_toRightOf="@+id/fab_menu_color"
+                android:clickable="true"
+                android:scaleType="centerCrop"
+                android:src="@drawable/white_board_pic_selector" />
+
             <com.starry.whiteboard.view.widget.floatingactionmenu.FloatingActionsMenu
                 android:id="@+id/fab_menu_text"
                 android:layout_width="wrap_content"
@@ -240,7 +261,7 @@
                 android:layout_alignParentBottom="true"
                 android:layout_marginBottom="16dp"
                 android:layout_marginLeft="12dp"
-                android:layout_toRightOf="@+id/fab_menu_color"
+                android:layout_toRightOf="@+id/iv_white_board_image"
                 fab:fab_addButtonBackground="@drawable/white_board_text_selector"
                 fab:fab_addButtonHeight="44dip"
                 fab:fab_addButtonStyle="customStyle"

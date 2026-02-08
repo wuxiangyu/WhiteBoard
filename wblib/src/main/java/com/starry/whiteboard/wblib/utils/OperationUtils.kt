@@ -32,6 +32,11 @@ object OperationUtils {
     const val DRAW_EMOJI = 4
 
     /**
+     * 操作类型-图片
+     */
+    const val DRAW_IMAGE = 5
+
+    /**
      * 当前是否禁止白板操作
      */
     @JvmField
@@ -228,6 +233,8 @@ object OperationUtils {
                 dp.drawText!!.status = 1 // DrawTextView.TEXT_VIEW
             } else if (dp.type == DRAW_EMOJI && dp.drawEmoji != null) {
                 dp.drawEmoji!!.status = 1 // DrawEmojiView.EMOJI_VIEW
+            } else if (dp.type == DRAW_IMAGE && dp.drawImage != null) {
+                dp.drawImage!!.status = 1 // DrawImageView.IMAGE_VIEW
             }
         }
     }
