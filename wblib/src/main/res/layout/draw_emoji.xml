@@ -54,6 +54,16 @@
             android:layout_toRightOf="@+id/rl_emoji"
             android:visibility="gone"
             android:background="@drawable/draw_text_edit" />
+
+        <ImageView
+            android:id="@+id/iv_emoji_rotate"
+            android:layout_width="30dip"
+            android:layout_height="30dip"
+            android:layout_centerHorizontal="true"
+            android:layout_alignTop="@+id/rl_emoji"
+            android:layout_marginTop="-15dip"
+            android:src="@drawable/draw_emoji_rotate"
+            android:visibility="gone" />
     </RelativeLayout>
 
 </RelativeLayout>

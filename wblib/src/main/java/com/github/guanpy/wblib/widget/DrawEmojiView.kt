@@ -8,6 +8,7 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.View.OnTouchListener
 import android.widget.Button
+import android.widget.ImageView
 import android.widget.RelativeLayout
 import android.widget.TextView
 import com.github.guanpy.wblib.R
@@ -30,6 +31,10 @@ class DrawEmojiView(context: Context, drawPoint: DrawPoint?, callBackListener: C
     private var mTvEmoji: TextView? = null
     private var mBtDelete: Button? = null
     private var mBtEdit: Button? = null
+
+    private var mIvRotate: ImageView? = null
+    private var mInitialRotation = 0f
+    private var mStartAngle = 0.0
 
     init {
         init(context, drawPoint, callBackListener)
@@ -54,6 +59,7 @@ class DrawEmojiView(context: Context, drawPoint: DrawPoint?, callBackListener: C
         mTvEmoji = findViewById(R.id.tv_emoji)
         mBtDelete = findViewById(R.id.bt_emoji_delete)
         mBtEdit = findViewById(R.id.bt_emoji_edit)
+        mIvRotate = findViewById(R.id.iv_emoji_rotate)
 
         if (mDrawPoint?.drawEmoji != null) {
             mTvEmoji!!.text = mDrawPoint!!.drawEmoji!!.emojiUnicode
@@ -78,6 +84,48 @@ class DrawEmojiView(context: Context, drawPoint: DrawPoint?, callBackListener: C
         mBtDelete!!.setOnClickListener(this)
         mBtEdit!!.setOnClickListener(this)
         mTvEmoji!!.setOnClickListener(this)
+
+        // Rotation handle touch listener
+        mIvRotate!!.setOnTouchListener { v, event ->
+            if (OperationUtils.DISABLE) {
+                val action = event.action
+                val rawX = event.rawX
+                val rawY = event.rawY
+                
+                // Get center of view on screen based on PARENT location and child's relative position
+                // This avoids the issue where child's rotation affects its own getLocationOnScreen results
+                val parentLocation = IntArray(2)
+                this.getLocationOnScreen(parentLocation)
+                
+                // Calculate center relative to screen
+                // mRlContent.left/top are layout positions relative to parent (DrawEmojiView)
+                // translationX/Y handles any movement done by drag
+                val centerX = parentLocation[0] + mRlContent!!.left + mRlContent!!.translationX + mRlContent!!.width / 2.0
+                val centerY = parentLocation[1] + mRlContent!!.top + mRlContent!!.translationY + mRlContent!!.height / 2.0
+
+                when (action) {
+                    MotionEvent.ACTION_DOWN -> {
+                        mInitialRotation = mRlContent!!.rotation
+                        mStartAngle = Math.toDegrees(Math.atan2(rawY - centerY, rawX - centerX))
+                    }
+                    MotionEvent.ACTION_MOVE -> {
+                        val currentAngle = Math.toDegrees(Math.atan2(rawY - centerY, rawX - centerX))
+                        val angleDiff = (currentAngle - mStartAngle).toFloat()
+                        mRlContent!!.rotation = mInitialRotation + angleDiff
+                    }
+                    MotionEvent.ACTION_UP -> {
+                         if (mCallBackListener != null) {
+                            val params = mRlContent!!.layoutParams as LayoutParams
+                            mDrawPoint!!.drawEmoji!!.rotation = mRlContent!!.rotation
+                            mCallBackListener!!.onUpdate(mDrawPoint)
+                        }
+                    }
+                }
+                true
+            } else {
+                false
+            }
+        }
 
         // Touch listener on TextView/Emoji container that delegates to MultiTouchListener on mRlContent
         mTvEmoji!!.setOnTouchListener(object : OnTouchListener {
@@ -117,6 +165,7 @@ class DrawEmojiView(context: Context, drawPoint: DrawPoint?, callBackListener: C
                 mRlEmoji!!.setBackgroundResource(R.color.transparent)
                 mBtEdit!!.visibility = GONE
                 mBtDelete!!.visibility = GONE
+                mIvRotate!!.visibility = GONE
             }
             EMOJI_DETAIL -> {
                 mVOutside!!.setBackgroundResource(R.color.transparent)
@@ -124,6 +173,7 @@ class DrawEmojiView(context: Context, drawPoint: DrawPoint?, callBackListener: C
                 mRlEmoji!!.setBackgroundResource(R.drawable.draw_text_border)
                 mBtEdit!!.visibility = VISIBLE
                 mBtDelete!!.visibility = VISIBLE
+                mIvRotate!!.visibility = VISIBLE
             }
             EMOJI_DELETE -> {
                 // Handled by callback optionally logic, but mainly just sets status
