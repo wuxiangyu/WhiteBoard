@@ -1,4 +1,4 @@
-package com.starry.whiteboard.wblib;
+package com.starry.whiteboard;
 
 import android.app.Application;
 import android.test.ApplicationTestCase;

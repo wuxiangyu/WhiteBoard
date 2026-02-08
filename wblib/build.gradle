@@ -4,7 +4,7 @@ plugins {
 }
 
 android {
-    namespace 'com.github.guanpy.wblib'
+    namespace 'com.starry.whiteboard.wblib'
     compileSdk 34
 
     defaultConfig {

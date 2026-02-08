@@ -112,13 +112,13 @@
             android:background="@drawable/bg_white_board"
             >
 
-            <com.github.guanpy.wblib.widget.DrawPenView
+            <com.starry.whiteboard.wblib.widget.DrawPenView
                 android:id="@+id/db_view"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                  />
 
-            <com.github.guanpy.wblib.widget.DrawEmojiLayout
+            <com.starry.whiteboard.wblib.widget.DrawEmojiLayout
                 android:id="@+id/de_view"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -126,7 +126,7 @@
                 android:focusable="false"
                 />
 
-            <com.github.guanpy.wblib.widget.DrawTextLayout
+            <com.starry.whiteboard.wblib.widget.DrawTextLayout
                 android:id="@+id/dt_view"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -148,7 +148,7 @@
                 android:visibility="gone"
                 android:background="@color/transparent" />
 
-            <com.example.gpy.whiteboard.view.widget.floatingactionmenu.FloatingActionsMenu
+            <com.starry.whiteboard.view.widget.floatingactionmenu.FloatingActionsMenu
                 android:id="@+id/fab_menu_size"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -163,28 +163,28 @@
                 fab:fab_expandDirection="up"
                 fab:fab_labelStyle="@style/menu_labels_style">
 
-                <com.example.gpy.whiteboard.view.widget.floatingactionmenu.FloatingImageButton
+                <com.starry.whiteboard.view.widget.floatingactionmenu.FloatingImageButton
                     android:id="@+id/bt_size_large"
                     android:layout_width="44dip"
                     android:layout_height="44dip"
                     android:background="@drawable/white_board_drable_back_normal" />
 
 
-                <com.example.gpy.whiteboard.view.widget.floatingactionmenu.FloatingImageButton
+                <com.starry.whiteboard.view.widget.floatingactionmenu.FloatingImageButton
                     android:id="@+id/bt_size_middle"
                     android:layout_width="44dip"
                     android:layout_height="44dip"
                     android:background="@drawable/white_board_drable_back_normal" />
 
-                <com.example.gpy.whiteboard.view.widget.floatingactionmenu.FloatingImageButton
+                <com.starry.whiteboard.view.widget.floatingactionmenu.FloatingImageButton
                     android:id="@+id/bt_size_mini"
                     android:layout_width="44dip"
                     android:layout_height="44dip"
                     android:background="@drawable/white_board_drable_back_normal" />
 
-            </com.example.gpy.whiteboard.view.widget.floatingactionmenu.FloatingActionsMenu>
+            </com.starry.whiteboard.view.widget.floatingactionmenu.FloatingActionsMenu>
 
-            <com.example.gpy.whiteboard.view.widget.floatingactionmenu.FloatingActionsMenu
+            <com.starry.whiteboard.view.widget.floatingactionmenu.FloatingActionsMenu
                 android:id="@+id/fab_menu_color"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -201,39 +201,39 @@
                 fab:fab_labelStyle="@style/menu_labels_style">
 
 
-                <com.example.gpy.whiteboard.view.widget.floatingactionmenu.FloatingImageButton
+                <com.starry.whiteboard.view.widget.floatingactionmenu.FloatingImageButton
                     android:id="@+id/bt_color_green"
                     android:layout_width="44dip"
                     android:layout_height="44dip"
                     android:background="@drawable/white_board_color_green_selector" />
 
-                <com.example.gpy.whiteboard.view.widget.floatingactionmenu.FloatingImageButton
+                <com.starry.whiteboard.view.widget.floatingactionmenu.FloatingImageButton
                     android:id="@+id/bt_color_purple"
                     android:layout_width="44dip"
                     android:layout_height="44dip"
                     android:background="@drawable/white_board_color_purple_selector" />
 
-                <com.example.gpy.whiteboard.view.widget.floatingactionmenu.FloatingImageButton
+                <com.starry.whiteboard.view.widget.floatingactionmenu.FloatingImageButton
                     android:id="@+id/bt_color_pink"
                     android:layout_width="44dip"
                     android:layout_height="44dip"
                     android:background="@drawable/white_board_color_pink_selector" />
 
-                <com.example.gpy.whiteboard.view.widget.floatingactionmenu.FloatingImageButton
+                <com.starry.whiteboard.view.widget.floatingactionmenu.FloatingImageButton
                     android:id="@+id/bt_color_orange"
                     android:layout_width="44dip"
                     android:layout_height="44dip"
                     android:background="@drawable/white_board_color_orange_selector" />
 
-                <com.example.gpy.whiteboard.view.widget.floatingactionmenu.FloatingImageButton
+                <com.starry.whiteboard.view.widget.floatingactionmenu.FloatingImageButton
                     android:id="@+id/bt_color_black"
                     android:layout_width="44dip"
                     android:layout_height="44dip"
                     android:background="@drawable/white_board_color_black_selector" />
 
-            </com.example.gpy.whiteboard.view.widget.floatingactionmenu.FloatingActionsMenu>
+            </com.starry.whiteboard.view.widget.floatingactionmenu.FloatingActionsMenu>
 
-            <com.example.gpy.whiteboard.view.widget.floatingactionmenu.FloatingActionsMenu
+            <com.starry.whiteboard.view.widget.floatingactionmenu.FloatingActionsMenu
                 android:id="@+id/fab_menu_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -249,29 +249,29 @@
                 fab:fab_expandDirection="up"
                 fab:fab_labelStyle="@style/menu_labels_style">
 
-                <com.example.gpy.whiteboard.view.widget.floatingactionmenu.FloatingImageButton
+                <com.starry.whiteboard.view.widget.floatingactionmenu.FloatingImageButton
                     android:id="@+id/bt_text_underline"
                     android:layout_width="44dip"
                     android:layout_height="44dip"
                     android:background="@drawable/white_board_text_underline_selector" />
 
 
-                <com.example.gpy.whiteboard.view.widget.floatingactionmenu.FloatingImageButton
+                <com.starry.whiteboard.view.widget.floatingactionmenu.FloatingImageButton
                     android:id="@+id/bt_text_italics"
                     android:layout_width="44dip"
                     android:layout_height="44dip"
                     android:background="@drawable/white_board_text_italics_selector"
                     android:visibility="gone" />
 
-                <com.example.gpy.whiteboard.view.widget.floatingactionmenu.FloatingImageButton
+                <com.starry.whiteboard.view.widget.floatingactionmenu.FloatingImageButton
                     android:id="@+id/bt_text_bold"
                     android:layout_width="44dip"
                     android:layout_height="44dip"
                     android:background="@drawable/white_board_text_bold_selector" />
 
-            </com.example.gpy.whiteboard.view.widget.floatingactionmenu.FloatingActionsMenu>
+            </com.starry.whiteboard.view.widget.floatingactionmenu.FloatingActionsMenu>
 
-            <com.example.gpy.whiteboard.view.widget.floatingactionmenu.FloatingActionsMenu
+            <com.starry.whiteboard.view.widget.floatingactionmenu.FloatingActionsMenu
                 android:id="@+id/fab_menu_eraser"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -288,26 +288,26 @@
                 fab:fab_labelStyle="@style/menu_labels_style">
 
 
-                <com.example.gpy.whiteboard.view.widget.floatingactionmenu.FloatingImageButton
+                <com.starry.whiteboard.view.widget.floatingactionmenu.FloatingImageButton
                     android:id="@+id/bt_eraser_large"
                     android:layout_width="44dip"
                     android:layout_height="44dip"
                     android:background="@drawable/white_board_drable_back_normal" />
 
 
-                <com.example.gpy.whiteboard.view.widget.floatingactionmenu.FloatingImageButton
+                <com.starry.whiteboard.view.widget.floatingactionmenu.FloatingImageButton
                     android:id="@+id/bt_eraser_middle"
                     android:layout_width="44dip"
                     android:layout_height="44dip"
                     android:background="@drawable/white_board_drable_back_normal" />
 
-                <com.example.gpy.whiteboard.view.widget.floatingactionmenu.FloatingImageButton
+                <com.starry.whiteboard.view.widget.floatingactionmenu.FloatingImageButton
                     android:id="@+id/bt_eraser_mini"
                     android:layout_width="44dip"
                     android:layout_height="44dip"
                     android:background="@drawable/white_board_drable_back_normal" />
 
-            </com.example.gpy.whiteboard.view.widget.floatingactionmenu.FloatingActionsMenu>
+            </com.starry.whiteboard.view.widget.floatingactionmenu.FloatingActionsMenu>
 
 
             <ImageView

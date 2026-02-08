@@ -4,11 +4,11 @@ plugins {
 }
 
 android {
-    namespace 'com.example.gpy.whiteboard'
+    namespace 'com.starry.whiteboard'
     compileSdk 34
 
     defaultConfig {
-        applicationId "com.example.gpy.whiteboard"
+        applicationId "com.starry.whiteboard"
         minSdk 24
         targetSdk 34
         versionCode 1
