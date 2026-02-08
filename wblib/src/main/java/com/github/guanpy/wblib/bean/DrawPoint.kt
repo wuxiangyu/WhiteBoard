@@ -20,6 +20,10 @@ class DrawPoint {
     @SerializedName("mDrawPenStr")
     var drawPenStr: DrawPenStr? = null
 
+    /**Emoji */
+    @SerializedName("mDrawEmoji")
+    var drawEmoji: DrawEmojiPoint? = null
+
     companion object {
         /**
          * 拷贝数据，防止引用传递 <br></br>
@@ -35,6 +39,9 @@ class DrawPoint {
                 dp.type = drawPoint.type
                 if (drawPoint.drawText != null) {
                     dp.drawText = drawPoint.drawText!!.copy()
+                }
+                if (drawPoint.drawEmoji != null) {
+                    dp.drawEmoji = drawPoint.drawEmoji!!.copy()
                 }
             } catch (e: Exception) {
                 e.printStackTrace()

@@ -4,7 +4,8 @@ fork form guanpy/WhiteBoard  现在重新用'gradle:8.3.0' 编译通过
 
 - 1、涂鸦功能：包括画笔粗细选择、颜色选择、橡皮擦等；
 - 2、文字输入：包括颜色选择、增、删、改等；
-- 3、白板功能：包括撤销、重做、新增、锁屏、切换、保存为图片、保存到本地等功能
+- 3、emoji输入: 插入emoji 
+- 4、白板功能：包括撤销、重做、新增、锁屏、切换、保存为图片、保存到本地等功能
 
 ![](https://github.com/guanpy/WhiteBoard/blob/master/screenshot/main.jpg)  
 
@@ -12,6 +13,10 @@ fork form guanpy/WhiteBoard  现在重新用'gradle:8.3.0' 编译通过
 ![](https://github.com/guanpy/WhiteBoard/blob/master/screenshot/main_pen.gif)  
 
 ![](https://github.com/guanpy/WhiteBoard/blob/master/screenshot/main_text.gif)
+
+
+![](https://github.com/wuxiangyu/WhiteBoard/blob/master/screenshot/main_emoji.png)
+
 ## TODO
 - 1、DrawTextView的接口化
 - 2、白板数据结构重定义

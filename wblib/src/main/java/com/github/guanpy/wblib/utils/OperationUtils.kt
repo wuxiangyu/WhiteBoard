@@ -27,6 +27,11 @@ object OperationUtils {
     const val DRAW_ERASER = 3
 
     /**
+     * 操作类型-Emoji
+     */
+    const val DRAW_EMOJI = 4
+
+    /**
      * 当前是否禁止白板操作
      */
     @JvmField

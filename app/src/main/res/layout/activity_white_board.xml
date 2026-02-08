@@ -118,6 +118,14 @@
                 android:layout_height="match_parent"
                  />
 
+            <com.github.guanpy.wblib.widget.DrawEmojiLayout
+                android:id="@+id/de_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:clickable="false"
+                android:focusable="false"
+                />
+
             <com.github.guanpy.wblib.widget.DrawTextLayout
                 android:id="@+id/dt_view"
                 android:layout_width="match_parent"
@@ -303,7 +311,7 @@
 
 
             <ImageView
-                android:id="@+id/iv_white_board_undo"
+                android:id="@+id/iv_white_board_emoji"
                 android:layout_width="44dp"
                 android:layout_height="44dp"
                 android:layout_alignParentBottom="true"
@@ -311,6 +319,20 @@
                 android:layout_marginBottom="16dp"
                 android:layout_marginLeft="12dp"
                 android:layout_toRightOf="@+id/fab_menu_eraser"
+                android:clickable="true"
+                android:elevation="10dp"
+                android:scaleType="centerCrop"
+                android:src="@drawable/white_board_emoji_selector" />
+
+            <ImageView
+                android:id="@+id/iv_white_board_undo"
+                android:layout_width="44dp"
+                android:layout_height="44dp"
+                android:layout_alignParentBottom="true"
+                android:layout_gravity="center_vertical"
+                android:layout_marginBottom="16dp"
+                android:layout_marginLeft="12dp"
+                android:layout_toRightOf="@+id/iv_white_board_emoji"
                 android:clickable="true"
                 android:scaleType="centerCrop"
                 android:src="@drawable/white_board_undo_selector" />

@@ -22,12 +22,16 @@ import com.github.guanpy.wblib.widget.DrawTextLayout
 import com.github.guanpy.wblib.widget.DrawTextView
 import java.io.File
 import java.io.FileOutputStream
+import com.example.gpy.whiteboard.view.fragment.EmojiBSFragment
+import com.github.guanpy.wblib.bean.DrawEmojiPoint
+import com.github.guanpy.wblib.bean.DrawPoint
+import com.github.guanpy.wblib.widget.DrawEmojiLayout
 
 /**
  * 白板工具
  * Created by gpy on 2015/6/2.
  */
-class WhiteBoardActivity : BaseActivity(), View.OnClickListener {
+class WhiteBoardActivity : BaseActivity(), View.OnClickListener, EmojiBSFragment.EmojiListener {
     private lateinit var mIvWhiteBoardBook: ImageView
     private lateinit var mRlHead: RelativeLayout
     private lateinit var mIvWhiteBoardBack: ImageView
@@ -36,6 +40,7 @@ class WhiteBoardActivity : BaseActivity(), View.OnClickListener {
     private lateinit var mIvWhiteBoardSave: ImageView
     private lateinit var mFlView: FrameLayout
     private lateinit var mDbView: DrawPenView
+    private lateinit var mDeView: DrawEmojiLayout
     private lateinit var mDtView: DrawTextLayout
     private lateinit var mFabMenuSize: FloatingActionsMenu
     private lateinit var mBtSizeLarge: FloatingImageButton
@@ -49,14 +54,18 @@ class WhiteBoardActivity : BaseActivity(), View.OnClickListener {
     private lateinit var mBtColorBlack: FloatingImageButton
     private lateinit var mFabMenuText: FloatingActionsMenu
     private lateinit var mBtTextUnderline: FloatingImageButton
+    // private lateinit var mBtTextEmoji: FloatingImageButton // Removed
     private lateinit var mBtTextItalics: FloatingImageButton
     private lateinit var mBtTextBold: FloatingImageButton
+    private lateinit var mIvWhiteBoardEmoji: ImageView // Added top-level button
     private lateinit var mFabMenuEraser: FloatingActionsMenu
     private lateinit var mBtEraserLarge: FloatingImageButton
     private lateinit var mBtEraserMiddle: FloatingImageButton
     private lateinit var mBtEraserMini: FloatingImageButton
     private lateinit var mIvWhiteBoardUndo: ImageView
     private lateinit var mIvWhiteBoardRedo: ImageView
+
+
     private lateinit var mLlWhiteBoardPage: LinearLayout
     private lateinit var mIvWhiteBoardPre: ImageView
     private lateinit var mTvWhiteBoardPage: TextView
@@ -88,6 +97,7 @@ class WhiteBoardActivity : BaseActivity(), View.OnClickListener {
         mIvWhiteBoardSave = findViewById(R.id.iv_white_board_save)
         mFlView = findViewById(R.id.fl_view)
         mDbView = findViewById(R.id.db_view)
+        mDeView = findViewById(R.id.de_view)
         mDtView = findViewById(R.id.dt_view)
         mFabMenuSize = findViewById(R.id.fab_menu_size)
         mBtSizeLarge = findViewById(R.id.bt_size_large)
@@ -101,8 +111,10 @@ class WhiteBoardActivity : BaseActivity(), View.OnClickListener {
         mBtColorBlack = findViewById(R.id.bt_color_black)
         mFabMenuText = findViewById(R.id.fab_menu_text)
         mBtTextUnderline = findViewById(R.id.bt_text_underline)
+        // mBtTextEmoji = findViewById(R.id.bt_text_emoji)
         mBtTextItalics = findViewById(R.id.bt_text_italics)
         mBtTextBold = findViewById(R.id.bt_text_bold)
+        mIvWhiteBoardEmoji = findViewById(R.id.iv_white_board_emoji) // Added
         mFabMenuEraser = findViewById(R.id.fab_menu_eraser)
         mBtEraserLarge = findViewById(R.id.bt_eraser_large)
         mBtEraserMiddle = findViewById(R.id.bt_eraser_middle)
@@ -139,6 +151,9 @@ class WhiteBoardActivity : BaseActivity(), View.OnClickListener {
     }
 
     private fun initEvent() {
+        mIvWhiteBoardEmoji.bringToFront()
+        mIvWhiteBoardEmoji.setOnClickListener(this)
+
         //头部
         mIvWhiteBoardBack.setOnClickListener(this)
         mIvWhiteBoardExport.setOnClickListener(this)
@@ -173,6 +188,7 @@ class WhiteBoardActivity : BaseActivity(), View.OnClickListener {
             }
         })
         mBtTextUnderline.setOnClickListener(this)
+        // mBtTextEmoji.setOnClickListener(this)
         mBtTextItalics.setOnClickListener(this)
         mBtTextBold.setOnClickListener(this)
         //橡皮擦尺寸大小
@@ -230,6 +246,10 @@ class WhiteBoardActivity : BaseActivity(), View.OnClickListener {
             setColor(WhiteBoardVariable.Color.BLACK)
         } else if (id == R.id.bt_text_underline) {
             setTextStyle(WhiteBoardVariable.TextStyle.CHANGE_UNDERLINE)
+        } else if (id == R.id.iv_white_board_emoji) {
+            val emojiBSFragment = EmojiBSFragment()
+            emojiBSFragment.setEmojiListener(this)
+            emojiBSFragment.show(supportFragmentManager, emojiBSFragment.tag)
         } else if (id == R.id.bt_text_italics) {
             setTextStyle(WhiteBoardVariable.TextStyle.CHANGE_ITALICS)
         } else if (id == R.id.bt_text_bold) {
@@ -429,6 +449,7 @@ class WhiteBoardActivity : BaseActivity(), View.OnClickListener {
      */
     private fun showPoints() {
         mDbView.showPoints()
+        mDeView.showPoints()
         mDtView.showPoints()
         mTvWhiteBoardPage.text = "" + (OperationUtils.mCurrentIndex + 1) + "/" + OperationUtils.drawPointSize
         showPage()
@@ -466,6 +487,8 @@ class WhiteBoardActivity : BaseActivity(), View.OnClickListener {
                 mDbView.undo()
             } else if (OperationUtils.deletePoints[delSize - 1].type == OperationUtils.DRAW_TEXT) {
                 mDtView.undo()
+            } else if (OperationUtils.deletePoints[delSize - 1].type == OperationUtils.DRAW_EMOJI) {
+                mDeView.undo()
             }
             showUndoRedo()
         }
@@ -486,6 +509,8 @@ class WhiteBoardActivity : BaseActivity(), View.OnClickListener {
                 mDbView.redo()
             } else if (OperationUtils.savePoints[saveSize - 1].type == OperationUtils.DRAW_TEXT) {
                 mDtView.redo()
+            } else if (OperationUtils.savePoints[saveSize - 1].type == OperationUtils.DRAW_EMOJI) {
+                mDeView.redo()
             }
             showUndoRedo()
         }
@@ -503,6 +528,7 @@ class WhiteBoardActivity : BaseActivity(), View.OnClickListener {
         mIvWhiteBoardQuit.visibility = View.GONE
         mIvWhiteBoardConfirm.visibility = View.GONE
         mDbView.showPoints()
+        mDeView.showPoints()
         mDtView.afterEdit(isSave)
     }
 
@@ -785,4 +811,19 @@ class WhiteBoardActivity : BaseActivity(), View.OnClickListener {
         }
     }
 
+    override fun onEmojiClick(emojiUnicode: String) {
+        OperationUtils.mCurrentDrawType = OperationUtils.DRAW_EMOJI
+        val drawPoint = OperationUtils.getDrawPointList(OperationUtils.mCurrentIndex)
+        val point = DrawPoint()
+        point.type = OperationUtils.DRAW_EMOJI
+        val drawEmojiPoint = DrawEmojiPoint()
+        drawEmojiPoint.id = OperationUtils.newMarkId
+        drawEmojiPoint.x = (mFlView.width / 2).toFloat()
+        drawEmojiPoint.y = (mFlView.height / 2).toFloat()
+        drawEmojiPoint.emojiUnicode = emojiUnicode
+        point.drawEmoji = drawEmojiPoint
+        drawPoint.savePoints.add(point)
+        mDeView.showPoints()
+        showUndoRedo()
+    }
 }
