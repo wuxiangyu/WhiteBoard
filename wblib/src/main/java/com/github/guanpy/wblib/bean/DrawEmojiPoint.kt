@@ -43,6 +43,12 @@ data class DrawEmojiPoint(
     var rotation: Float = 0f,
 
     /**
+     * 当前Emoji状态
+     */
+    @SerializedName("mStatus")
+    var status: Int = 0,
+
+    /**
      * 是否显示
      */
     @SerializedName("mIsVisible")

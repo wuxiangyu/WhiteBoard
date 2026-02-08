@@ -26,12 +26,14 @@ import com.example.gpy.whiteboard.view.fragment.EmojiBSFragment
 import com.github.guanpy.wblib.bean.DrawEmojiPoint
 import com.github.guanpy.wblib.bean.DrawPoint
 import com.github.guanpy.wblib.widget.DrawEmojiLayout
+import com.github.guanpy.wblib.widget.DrawEmojiView
 
 /**
  * 白板工具
  * Created by gpy on 2015/6/2.
  */
-class WhiteBoardActivity : BaseActivity(), View.OnClickListener, EmojiBSFragment.EmojiListener {
+class WhiteBoardActivity : BaseActivity(), View.OnClickListener, EmojiBSFragment.EmojiListener, DrawEmojiLayout.OnEmojiActionListener {
+    private var mEditingEmojiPoint: DrawEmojiPoint? = null
     private lateinit var mIvWhiteBoardBook: ImageView
     private lateinit var mRlHead: RelativeLayout
     private lateinit var mIvWhiteBoardBack: ImageView
@@ -136,6 +138,8 @@ class WhiteBoardActivity : BaseActivity(), View.OnClickListener, EmojiBSFragment
         mLlWhiteBoardNext = findViewById(R.id.ll_white_board_next)
         
         mDtView.init(this)
+        mDeView.init(this) // keep existing init if it was there? No, looking at initView: mDeView = findViewById...
+        mDeView.setOnEmojiActionListener(this)
         mDtView.init(this)
         val keepPoints = intent.getBooleanExtra("KEEP_POINTS", false)
         OperationUtils.init(keepPoints) // Ensure defaults (DISABLE=true)
@@ -812,18 +816,33 @@ class WhiteBoardActivity : BaseActivity(), View.OnClickListener, EmojiBSFragment
     }
 
     override fun onEmojiClick(emojiUnicode: String) {
-        OperationUtils.mCurrentDrawType = OperationUtils.DRAW_EMOJI
-        val drawPoint = OperationUtils.getDrawPointList(OperationUtils.mCurrentIndex)
-        val point = DrawPoint()
-        point.type = OperationUtils.DRAW_EMOJI
-        val drawEmojiPoint = DrawEmojiPoint()
-        drawEmojiPoint.id = OperationUtils.newMarkId
-        drawEmojiPoint.x = (mFlView.width / 2).toFloat()
-        drawEmojiPoint.y = (mFlView.height / 2).toFloat()
-        drawEmojiPoint.emojiUnicode = emojiUnicode
-        point.drawEmoji = drawEmojiPoint
-        drawPoint.savePoints.add(point)
-        mDeView.showPoints()
-        showUndoRedo()
+        if (mEditingEmojiPoint != null) {
+            mEditingEmojiPoint!!.emojiUnicode = emojiUnicode
+            mEditingEmojiPoint!!.status = DrawEmojiView.EMOJI_VIEW
+            mEditingEmojiPoint = null
+            mDeView.showPoints()
+        } else {
+            OperationUtils.mCurrentDrawType = OperationUtils.DRAW_EMOJI
+            val drawPoint = OperationUtils.getDrawPointList(OperationUtils.mCurrentIndex)
+            val point = DrawPoint()
+            point.type = OperationUtils.DRAW_EMOJI
+            val drawEmojiPoint = DrawEmojiPoint()
+            drawEmojiPoint.id = OperationUtils.newMarkId
+            drawEmojiPoint.x = (mFlView.width / 2).toFloat()
+            drawEmojiPoint.y = (mFlView.height / 2).toFloat()
+            drawEmojiPoint.emojiUnicode = emojiUnicode
+            drawEmojiPoint.status = DrawEmojiView.EMOJI_VIEW
+            point.drawEmoji = drawEmojiPoint
+            drawPoint.savePoints.add(point)
+            mDeView.showPoints()
+            showUndoRedo()
+        }
+    }
+
+    override fun onEmojiEdit(drawPoint: DrawPoint) {
+        mEditingEmojiPoint = drawPoint.drawEmoji
+        val emojiBSFragment = EmojiBSFragment()
+        emojiBSFragment.setEmojiListener(this)
+        emojiBSFragment.show(supportFragmentManager, emojiBSFragment.tag)
     }
 }

@@ -1,27 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/transparent">
 
-    <TextView
-        android:id="@+id/tv_emoji"
+    <View
+        android:id="@+id/v_outside"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/transparent" />
+
+    <RelativeLayout
+        android:id="@+id/rl_content"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@android:color/transparent"
-        android:textSize="50sp"
-        android:gravity="center"
-        android:padding="10dp"
-        android:textColor="@android:color/black" />
+        android:layout_height="wrap_content">
 
-    <ImageView
-        android:id="@+id/iv_delete"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:src="@drawable/draw_text_delete"
-        android:layout_alignTop="@id/tv_emoji"
-        android:layout_alignRight="@id/tv_emoji"
-        android:layout_marginTop="0dp"
-        android:layout_marginRight="0dp"
-        android:visibility="gone"/>
+        <RelativeLayout
+            android:id="@+id/rl_emoji"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dip"
+            android:layout_marginRight="15dip"
+            android:background="@drawable/draw_text_border"
+            android:gravity="center"
+            android:padding="10dip">
+
+            <TextView
+                android:id="@+id/tv_emoji"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/transparent"
+                android:textSize="50sp"
+                android:gravity="center"
+                android:clickable="true"
+                android:textColor="@android:color/black" />
+        </RelativeLayout>
+
+        <Button
+            android:id="@+id/bt_emoji_delete"
+            android:layout_width="30dip"
+            android:layout_height="30dip"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:visibility="gone"
+            android:background="@drawable/draw_text_delete" />
+
+        <Button
+            android:id="@+id/bt_emoji_edit"
+            android:layout_width="30dip"
+            android:layout_height="30dip"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="-30dip"
+            android:layout_toRightOf="@+id/rl_emoji"
+            android:visibility="gone"
+            android:background="@drawable/draw_text_edit" />
+    </RelativeLayout>
 
 </RelativeLayout>

@@ -41,7 +41,7 @@ class DrawEmojiLayout : FrameLayout {
         }
         for (i in 0 until size) {
             val dp = OperationUtils.savePoints[i]
-            if (dp.type == OperationUtils.DRAW_EMOJI && dp.drawEmoji!!.isVisible) {
+            if (dp.type == OperationUtils.DRAW_EMOJI && dp.drawEmoji!!.isVisible && dp.drawEmoji!!.status != DrawEmojiView.EMOJI_DELETE) {
                 val de = DrawEmojiView(mContext!!, dp, mCallBackListener)
                 de.tag = i
                 this.addView(de)
@@ -49,11 +49,25 @@ class DrawEmojiLayout : FrameLayout {
         }
     }
 
+    private var mActionListener: OnEmojiActionListener? = null
+
+    interface OnEmojiActionListener {
+        fun onEmojiEdit(drawPoint: DrawPoint)
+    }
+
+    fun setOnEmojiActionListener(listener: OnEmojiActionListener) {
+        mActionListener = listener
+    }
+
     private val mCallBackListener: DrawEmojiView.CallBackListener =
         object : DrawEmojiView.CallBackListener {
             override fun onUpdate(drawPoint: DrawPoint?) {
                 updatePoint(drawPoint!!)
                 showPoints()
+            }
+
+            override fun onEdit(drawPoint: DrawPoint?) {
+                mActionListener?.onEmojiEdit(drawPoint!!)
             }
         }
 
