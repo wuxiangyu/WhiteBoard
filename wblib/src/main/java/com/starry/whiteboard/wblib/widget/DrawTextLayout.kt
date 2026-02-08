@@ -126,6 +126,11 @@ class DrawTextLayout : FrameLayout {
             "修改标注",
             "-" + drawPoint.drawText!!.x + "," + drawPoint.drawText!!.y
         )
+        // Deselect all other items before adding/updating this one
+        if (drawPoint.drawText!!.status == DrawTextView.TEXT_DETAIL || drawPoint.drawText!!.status == DrawTextView.TEXT_EDIT) {
+             OperationUtils.deselectAllItems()
+        }
+
         val size = OperationUtils.savePoints.size
         for (i in size - 1 downTo 0) {
             val temp = OperationUtils.savePoints[i]
@@ -137,6 +142,8 @@ class DrawTextLayout : FrameLayout {
         if (!TextUtils.isEmpty(drawPoint.drawText!!.str)) {
             OperationUtils.savePoints.add(drawPoint)
             EventBus.postEvent(Events.WHITE_BOARD_UNDO_REDO)
+            // Trigger global refresh to update other items' selection state
+            EventBus.postEvent(Events.WHITE_BOARD_REFRESH)
         }
         OperationUtils.deletePoints.clear()
     }

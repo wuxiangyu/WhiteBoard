@@ -72,6 +72,11 @@ class DrawEmojiLayout : FrameLayout {
         }
 
     private fun updatePoint(drawPoint: DrawPoint) {
+        // Deselect all other items before adding/updating this one
+        if (drawPoint.drawEmoji!!.status == DrawEmojiView.EMOJI_DETAIL) {
+             OperationUtils.deselectAllItems()
+        }
+
         val size = OperationUtils.savePoints.size
         for (i in size - 1 downTo 0) {
             val temp = OperationUtils.savePoints[i]
@@ -84,6 +89,8 @@ class DrawEmojiLayout : FrameLayout {
         OperationUtils.savePoints.add(drawPoint)
         OperationUtils.deletePoints.clear()
         EventBus.postEvent(Events.WHITE_BOARD_UNDO_REDO)
+        // Trigger global refresh to update other items' selection state
+        EventBus.postEvent(Events.WHITE_BOARD_REFRESH)
     }
 
     fun undo() {

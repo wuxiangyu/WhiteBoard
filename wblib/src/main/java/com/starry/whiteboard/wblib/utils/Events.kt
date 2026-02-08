@@ -11,4 +11,6 @@ object Events {
     const val WHITE_BOARD_UNDO_REDO = "undo_redo"
 
     const val WHITE_BOARD_TEXT_EDIT = "text_edit"
+
+    const val WHITE_BOARD_REFRESH = "refresh"
 }

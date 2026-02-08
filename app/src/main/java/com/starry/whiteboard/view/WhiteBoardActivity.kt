@@ -815,6 +815,11 @@ class WhiteBoardActivity : BaseActivity(), View.OnClickListener, EmojiBSFragment
         }
     }
 
+    @ReceiveEvents(name = Events.WHITE_BOARD_REFRESH)
+    private fun refresh() {
+        showPoints()
+    }
+
     override fun onEmojiClick(emojiUnicode: String) {
         if (mEditingEmojiPoint != null) {
             mEditingEmojiPoint!!.emojiUnicode = emojiUnicode

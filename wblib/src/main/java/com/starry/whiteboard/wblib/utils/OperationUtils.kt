@@ -213,4 +213,22 @@ object OperationUtils {
      */
     val deletePoints: MutableList<DrawPoint>
         get() = getDrawPointList(mCurrentIndex).deletePoints
+
+    /**
+     * 取消所有选中
+     */
+    fun deselectAllItems() {
+        if (mWhiteBoardPoints == null || mWhiteBoardPoints!!.whiteBoardPoints == null) {
+            return
+        }
+        val size = savePoints.size
+        for (i in 0 until size) {
+            val dp = savePoints[i]
+            if (dp.type == DRAW_TEXT && dp.drawText != null) {
+                dp.drawText!!.status = 1 // DrawTextView.TEXT_VIEW
+            } else if (dp.type == DRAW_EMOJI && dp.drawEmoji != null) {
+                dp.drawEmoji!!.status = 1 // DrawEmojiView.EMOJI_VIEW
+            }
+        }
+    }
 }
