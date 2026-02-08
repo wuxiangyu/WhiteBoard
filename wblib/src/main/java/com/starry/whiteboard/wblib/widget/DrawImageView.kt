@@ -142,106 +142,28 @@ class DrawImageView(context: Context, drawPoint: DrawPoint?, callBackListener: C
             }
         }
 
-        // Image touch listener - simple drag without scale interference
+        // Image touch listener - use MultiTouchListener like emoji for smooth pinch-to-zoom
         mIvImage!!.setOnTouchListener(object : OnTouchListener {
-            private var mPrevX = 0f
-            private var mPrevY = 0f
-            private var mActivePointerId = -1
-            private val TAG = "DrawImageView"
-            private var mIsPinching = false // Track if we're actually pinching
-            
-            private val mScaleDetector = android.view.ScaleGestureDetector(context, object : android.view.ScaleGestureDetector.SimpleOnScaleGestureListener() {
-                override fun onScaleBegin(detector: android.view.ScaleGestureDetector): Boolean {
-                    // Only begin scaling if we have 2+ fingers
-                    mIsPinching = true
-                    android.util.Log.d(TAG, "onScaleBegin - mIsPinching=true")
-                    return true
-                }
-                
-                override fun onScale(detector: android.view.ScaleGestureDetector): Boolean {
-                    android.util.Log.d(TAG, "onScale called - mIsPinching=$mIsPinching, scaleFactor: ${detector.scaleFactor}")
-                    if (!mIsPinching) return true // Ignore if not actually pinching
-                    
-                    if (mDrawPoint!!.drawImage!!.status == IMAGE_DETAIL && OperationUtils.DISABLE) {
-                        val scaleFactor = detector.scaleFactor
-                        // Ignore very small changes that might be noise
-                        if (kotlin.math.abs(scaleFactor - 1.0f) < 0.01f) return true
-                        
-                        val currentScale = mRlContent!!.scaleX * scaleFactor
-                        val clampedScale = kotlin.math.max(0.5f, kotlin.math.min(currentScale, 5.0f))
-                        mRlContent!!.scaleX = clampedScale
-                        mRlContent!!.scaleY = clampedScale
-                        android.util.Log.d(TAG, "Scale applied: $clampedScale")
-                    }
-                    return true
-                }
-                
-                override fun onScaleEnd(detector: android.view.ScaleGestureDetector) {
-                    mIsPinching = false
-                    android.util.Log.d(TAG, "onScaleEnd - mIsPinching=false")
-                }
-            })
-            
-            override fun onTouch(view: View, event: MotionEvent): Boolean {
-                val params = mRlContent!!.layoutParams as LayoutParams
-                android.util.Log.d(TAG, "onTouch: action=${event.actionMasked}, pointerCount=${event.pointerCount}, scaleX=${mRlContent!!.scaleX}, width=${mRlContent!!.width}, height=${mRlContent!!.height}, lpWidth=${params.width}, lpHeight=${params.height}")
-                
-                if (mDrawPoint!!.drawImage!!.status != IMAGE_DETAIL || !OperationUtils.DISABLE) {
-                    // For click to select
-                    if (event.action == MotionEvent.ACTION_UP && OperationUtils.DISABLE) {
+            private val multiTouchListener = MultiTouchListener(context, mRlContent, true, object : MultiTouchListener.OnGestureControl {
+                override fun onClick() {
+                    if (OperationUtils.DISABLE) {
                         switchView(IMAGE_DETAIL)
                     }
-                    return true
-                }
-                
-                // Reset pinching flag when fingers are lifted
-                val action = event.actionMasked
-                if (action == MotionEvent.ACTION_POINTER_UP || action == MotionEvent.ACTION_UP) {
-                    if (event.pointerCount <= 2) {
-                        mIsPinching = false
-                        android.util.Log.d(TAG, "Resetting mIsPinching to false due to pointer up")
-                    }
-                }
-                
-                // Scale with two fingers only - must check BEFORE passing event
-                if (event.pointerCount >= 2 && action != MotionEvent.ACTION_UP) {
-                    mScaleDetector.onTouchEvent(event)
-                    return true
                 }
 
+                override fun onLongClick() {}
+            })
 
-                when (action) {
-                    MotionEvent.ACTION_DOWN -> {
-                        mPrevX = event.rawX
-                        mPrevY = event.rawY
-                        mActivePointerId = event.getPointerId(0)
-                        mRlContent!!.bringToFront()
-                        android.util.Log.d(TAG, "ACTION_DOWN: prevX=$mPrevX, prevY=$mPrevY")
-                    }
-                    MotionEvent.ACTION_MOVE -> {
-                        if (event.pointerCount == 1) {
-                            val currX = event.rawX
-                            val currY = event.rawY
-                            val deltaX = currX - mPrevX
-                            val deltaY = currY - mPrevY
-                            
-                            mRlContent!!.translationX = mRlContent!!.translationX + deltaX
-                            mRlContent!!.translationY = mRlContent!!.translationY + deltaY
-                            
-                            mPrevX = currX
-                            mPrevY = currY
-                            android.util.Log.d(TAG, "ACTION_MOVE: deltaX=$deltaX, deltaY=$deltaY, transX=${mRlContent!!.translationX}, transY=${mRlContent!!.translationY}")
-                        }
-                    }
-                    MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
-                        // Keep translation values - DON'T update layoutParams as it causes remeasure
+            override fun onTouch(view: View, event: MotionEvent): Boolean {
+                if (mDrawPoint!!.drawImage!!.status == IMAGE_DETAIL && OperationUtils.DISABLE) {
+                    multiTouchListener.onTouch(view, event)
+                    if (event.action == MotionEvent.ACTION_UP) {
+                        // Update position and scale
                         val params = mRlContent!!.layoutParams as LayoutParams
                         val newX = params.leftMargin + mRlContent!!.translationX
                         val newY = params.topMargin + mRlContent!!.translationY
                         
-                        android.util.Log.d(TAG, "ACTION_UP: newX=$newX, newY=$newY, finalScale=${mRlContent!!.scaleX}, transX=${mRlContent!!.translationX}, transY=${mRlContent!!.translationY}")
-                        
-                        // Update point in-place - remember total position (margin + translation)
+                        // Update in savePoints
                         val size = OperationUtils.savePoints.size
                         for (i in size - 1 downTo 0) {
                             val temp = OperationUtils.savePoints[i]
@@ -255,10 +177,10 @@ class DrawImageView(context: Context, drawPoint: DrawPoint?, callBackListener: C
                                 break
                             }
                         }
-                        mActivePointerId = -1
                     }
+                    return true
                 }
-                return true
+                return false
             }
         })
     }

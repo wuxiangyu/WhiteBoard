@@ -4,15 +4,14 @@ import android.content.Context
 import android.view.GestureDetector
 import android.view.GestureDetector.SimpleOnGestureListener
 import android.view.MotionEvent
-import android.view.ScaleGestureDetector
-import android.view.ScaleGestureDetector.SimpleOnScaleGestureListener
 import android.view.View
 import android.view.View.OnTouchListener
 import kotlin.math.max
 import kotlin.math.min
 
 /**
- * Adapted from PhotoEditor MultiTouchListener
+ * Adapted from PhotoEditor MultiTouchListener.
+ * Uses CustomScaleGestureDetector for smooth pinch-to-zoom without jitter.
  */
 class MultiTouchListener(
     context: Context,
@@ -22,7 +21,7 @@ class MultiTouchListener(
 ) : OnTouchListener {
 
     private val mGestureListener: GestureDetector
-    private val mScaleGestureDetector: ScaleGestureDetector
+    private val mScaleGestureDetector: CustomScaleGestureDetector
     
     private val isRotateEnabled = true
     private val isTranslateEnabled = true
@@ -42,27 +41,27 @@ class MultiTouchListener(
         fun onLongClick()
     }
 
-    private inner class ScaleGestureListener : SimpleOnScaleGestureListener() {
+    private inner class ScaleGestureListener : CustomScaleGestureDetector.SimpleOnScaleGestureListener() {
         private var mPivotX = 0f
         private var mPivotY = 0f
         private val mPrevSpanVector = Vector2D()
 
-        override fun onScaleBegin(detector: ScaleGestureDetector): Boolean {
-            mPivotX = detector.focusX
-            mPivotY = detector.focusY
-            mPrevSpanVector.set(detector.currentSpanVector)
+        override fun onScaleBegin(view: View, detector: CustomScaleGestureDetector): Boolean {
+            mPivotX = detector.getFocusX()
+            mPivotY = detector.getFocusY()
+            mPrevSpanVector.set(detector.getCurrentSpanVector())
             return isPinchScalable
         }
 
-        override fun onScale(detector: ScaleGestureDetector): Boolean {
+        override fun onScale(view: View, detector: CustomScaleGestureDetector): Boolean {
             val info = TransformInfo()
-            info.deltaScale = if (isScaleEnabled) detector.scaleFactor else 1.0f
+            info.deltaScale = if (isScaleEnabled) detector.getScaleFactor() else 1.0f
             info.deltaAngle = if (isRotateEnabled) Vector2D.getAngle(
                 mPrevSpanVector,
-                detector.currentSpanVector
+                detector.getCurrentSpanVector()
             ) else 0.0f
-            info.deltaX = if (isTranslateEnabled) detector.focusX - mPivotX else 0.0f
-            info.deltaY = if (isTranslateEnabled) detector.focusY - mPivotY else 0.0f
+            info.deltaX = if (isTranslateEnabled) detector.getFocusX() - mPivotX else 0.0f
+            info.deltaY = if (isTranslateEnabled) detector.getFocusY() - mPivotY else 0.0f
             info.pivotX = mPivotX
             info.pivotY = mPivotY
             info.minimumScale = minimumScale
@@ -72,9 +71,6 @@ class MultiTouchListener(
             return !isPinchScalable
         }
     }
-    
-    private val ScaleGestureDetector.currentSpanVector: Vector2D
-        get() = Vector2D(currentSpanX, currentSpanY)
 
     private class TransformInfo {
         var deltaX = 0f
@@ -148,7 +144,7 @@ class MultiTouchListener(
     }
 
     init {
-        mScaleGestureDetector = ScaleGestureDetector(context, ScaleGestureListener())
+        mScaleGestureDetector = CustomScaleGestureDetector(ScaleGestureListener())
         mGestureListener = GestureDetector(context, GestureListener())
     }
 
@@ -156,7 +152,7 @@ class MultiTouchListener(
         // Use parentView if provided, otherwise the touched view
         viewReference = parentView ?: view
         
-        mScaleGestureDetector.onTouchEvent(event)
+        mScaleGestureDetector.onTouchEvent(viewReference!!, event)
         mGestureListener.onTouchEvent(event)
 
         if (!isTranslateEnabled) {
