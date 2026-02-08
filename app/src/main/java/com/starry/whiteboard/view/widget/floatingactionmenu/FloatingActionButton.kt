@@ -125,7 +125,7 @@ open class FloatingActionButton : FloatingImageButton {
     }
 
     fun getColor(@ColorRes id: Int): Int {
-        return resources.getColor(id)
+        return androidx.core.content.ContextCompat.getColor(context, id)
     }
 
     fun getDimension(@DimenRes id: Int): Float {
@@ -157,7 +157,7 @@ open class FloatingActionButton : FloatingImageButton {
 
         val layerDrawable = LayerDrawable(
             arrayOf(
-                resources.getDrawable(if (size == SIZE_NORMAL) R.drawable.fab_bg_normal else R.drawable.fab_bg_mini),
+                androidx.core.content.ContextCompat.getDrawable(context, if (size == SIZE_NORMAL) R.drawable.fab_bg_normal else R.drawable.fab_bg_mini)!!,
                 createFillDrawable(strokeWidth),
                 createOuterStrokeDrawable(strokeWidth),
                 getIconDrawable()
@@ -201,7 +201,7 @@ open class FloatingActionButton : FloatingImageButton {
         if (mIconDrawable != null) {
             return mIconDrawable!!
         } else if (mIcon != 0) {
-            return resources.getDrawable(mIcon)
+            return androidx.core.content.ContextCompat.getDrawable(context, mIcon)!!
         } else {
             return ColorDrawable(Color.TRANSPARENT)
         }
@@ -247,8 +247,7 @@ open class FloatingActionButton : FloatingImageButton {
                 bounds.top.toFloat(),
                 bounds.right.toFloat(),
                 bounds.bottom.toFloat(),
-                mAlpha,
-                Canvas.ALL_SAVE_FLAG
+                mAlpha
             )
             super.draw(canvas)
             canvas.restore()
@@ -338,11 +337,7 @@ open class FloatingActionButton : FloatingImageButton {
 
     @SuppressLint("NewApi")
     private fun setBackgroundCompat(drawable: Drawable) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-            background = drawable
-        } else {
-            setBackgroundDrawable(drawable)
-        }
+        background = drawable
     }
 
     override fun setVisibility(visibility: Int) {

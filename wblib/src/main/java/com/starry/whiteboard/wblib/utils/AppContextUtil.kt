@@ -24,7 +24,7 @@ object AppContextUtil {
 
     @JvmStatic
     fun getColor(resId: Int): Int {
-        return sContext?.resources?.getColor(resId) ?: -1
+        return sContext?.getColor(resId) ?: -1
     }
 
     @JvmStatic

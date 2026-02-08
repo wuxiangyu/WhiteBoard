@@ -14,6 +14,7 @@ import com.starry.whiteboard.wblib.bean.DrawTextPoint
 import com.starry.whiteboard.wblib.utils.Events
 import com.starry.whiteboard.wblib.utils.OperationUtils
 import com.starry.whiteboard.wblib.utils.WhiteBoardVariable
+import com.starry.whiteboard.wblib.utils.AppContextUtil
 
 /**
  * 白板--文字层
@@ -34,8 +35,8 @@ class DrawTextLayout : FrameLayout {
         mContext = context
     }
 
-    fun init(activity: Activity) {
-        this.setBackgroundColor(resources.getColor(R.color.transparent))
+    fun init() {
+        this.setBackgroundColor(AppContextUtil.getColor(R.color.transparent))
         showPoints()
     }
 

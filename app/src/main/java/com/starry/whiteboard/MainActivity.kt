@@ -31,6 +31,18 @@ class MainActivity : BaseActivity() {
 
     override fun afterCreate(savedInstanceState: Bundle?) {
         initView()
+        onBackPressedDispatcher.addCallback(this, object : androidx.activity.OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                val mCurrentTime = System.currentTimeMillis()
+                if (mCurrentTime - mBackPressedTime > 1000) {
+                    ToastUtils.showToast(this@MainActivity, R.string.app_logout)
+                    mBackPressedTime = mCurrentTime
+                    return
+                }
+                finish()
+                System.exit(0)
+            }
+        })
     }
 
     override fun onResume() {
@@ -66,17 +78,6 @@ class MainActivity : BaseActivity() {
             OperationUtils.initDrawPointList()
             navi2Page(WhiteBoardActivity::class.java)
         }
-    }
-
-    override fun onBackPressed() {
-        val mCurrentTime = System.currentTimeMillis()
-        if (mCurrentTime - this.mBackPressedTime > 1000) {
-            ToastUtils.showToast(this, R.string.app_logout)
-            this.mBackPressedTime = mCurrentTime
-            return
-        }
-        super.onBackPressed()
-        System.exit(0)
     }
 
     private inner class WbAdapter : BaseAdapter() {

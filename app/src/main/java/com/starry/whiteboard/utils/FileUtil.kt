@@ -41,6 +41,7 @@ object FileUtil {
      */
     @JvmStatic
     fun getAutoFileOrFilesSize(filePath: String?): String {
+        if (filePath == null) return "0B"
         val file = File(filePath)
         var blockSize: Long = 0
         try {
@@ -65,6 +66,7 @@ object FileUtil {
      */
     @JvmStatic
     fun getFileOrFilesSize(filePath: String?, sizeType: Int): Double {
+        if (filePath == null) return 0.0
         val file = File(filePath)
         var blockSize: Long = 0
         try {
@@ -91,8 +93,7 @@ object FileUtil {
     private fun getFileSize(file: File): Long {
         var size: Long = 0
         if (file.exists()) {
-            var fis: FileInputStream? = null
-            fis = FileInputStream(file)
+            val fis = FileInputStream(file)
             size = fis.available().toLong()
         } else {
             file.createNewFile()
@@ -130,7 +131,7 @@ object FileUtil {
      */
     private fun FormetFileSize(fileS: Long): String {
         val df = DecimalFormat("#.00")
-        var fileSizeString = ""
+        val fileSizeString: String
         val wrongSize = "0B"
         if (fileS == 0L) {
             return wrongSize
@@ -157,7 +158,7 @@ object FileUtil {
     private fun FormetFileSize(fileS: Long, sizeType: Int): Double {
         val df = DecimalFormat("#.00")
         var fileSizeLong = 0.0
-        switch@ when (sizeType) {
+        when (sizeType) {
             SIZETYPE_B -> fileSizeLong = java.lang.Double.valueOf(df.format(fileS.toDouble()))
             SIZETYPE_KB -> fileSizeLong = java.lang.Double.valueOf(df.format(fileS.toDouble() / 1024))
             SIZETYPE_MB -> fileSizeLong =

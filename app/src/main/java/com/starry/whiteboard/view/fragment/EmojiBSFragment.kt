@@ -39,7 +39,7 @@ class EmojiBSFragment : BottomSheetDialogFragment() {
         val params = (contentView.parent as View).layoutParams as CoordinatorLayout.LayoutParams
         val behavior = params.behavior
         if (behavior != null && behavior is BottomSheetBehavior<*>) {
-            behavior.setBottomSheetCallback(mBottomSheetBehaviorCallback)
+            behavior.addBottomSheetCallback(mBottomSheetBehaviorCallback)
         }
         (contentView.parent as View).setBackgroundColor(resources.getColor(android.R.color.transparent, null))
         val rvEmoji: RecyclerView = contentView.findViewById(R.id.rvEmoji)
@@ -47,7 +47,7 @@ class EmojiBSFragment : BottomSheetDialogFragment() {
         rvEmoji.layoutManager = gridLayoutManager
         val emojiAdapter = EmojiAdapter()
         rvEmoji.adapter = emojiAdapter
-        val emojis = getEmojis(requireContext())
+        getEmojis(requireContext())
         rvEmoji.setHasFixedSize(true)
         rvEmoji.setItemViewCacheSize(emojisList.size)
     }

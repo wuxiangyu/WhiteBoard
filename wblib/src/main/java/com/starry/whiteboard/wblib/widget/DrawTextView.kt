@@ -66,9 +66,8 @@ class DrawTextView(context: Context, drawPoint: DrawPoint?, callBackListener: Ca
         mContext = context
         mDrawPoint = DrawPoint.copyDrawPoint(drawPoint!!)
         mCallBackListener = callBackListener
-        val display = (mContext as Activity?)!!.windowManager
-            .defaultDisplay
-        mWidth = display.width
+        mCallBackListener = callBackListener
+        mWidth = mContext!!.resources.displayMetrics.widthPixels
         initUI()
         initEvent()
         switchView(mDrawPoint!!.drawText!!.status)
@@ -234,18 +233,18 @@ class DrawTextView(context: Context, drawPoint: DrawPoint?, callBackListener: Ca
             setText(mDrawPoint!!.drawText!!.str)
 
             // Sanity check coordinates to prevent text disappearing off-screen
-            val display = (mContext as Activity?)!!.windowManager.defaultDisplay
+            val displayMetrics = mContext!!.resources.displayMetrics
             val params = mRlContent!!.layoutParams as LayoutParams
             var newX = params.leftMargin + mRlContent!!.translationX
             var newY = params.topMargin + mRlContent!!.translationY
 
-            if (newX < 0 || newX > display.width) {
+            if (newX < 0 || newX > displayMetrics.widthPixels) {
                  newX = 100f // Reset to visible area
                  mRlContent!!.translationX = 0f
                  params.leftMargin = 100
                  mRlContent!!.layoutParams = params
             }
-             if (newY < 0 || newY > display.height) {
+             if (newY < 0 || newY > displayMetrics.heightPixels) {
                  newY = 100f
                  mRlContent!!.translationY = 0f
                  params.topMargin = 100
@@ -309,7 +308,7 @@ class DrawTextView(context: Context, drawPoint: DrawPoint?, callBackListener: Ca
     }
 
     private fun hideSoftInput() {
-        if (this == null || mContext == null || mEtTextEdit == null) {
+        if (mContext == null || mEtTextEdit == null) {
             return
         }
         // 隐藏输入法

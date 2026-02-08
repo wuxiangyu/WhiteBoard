@@ -44,8 +44,8 @@ class DrawEmojiView(context: Context, drawPoint: DrawPoint?, callBackListener: C
         mContext = context
         mDrawPoint = DrawPoint.copyDrawPoint(drawPoint!!)
         mCallBackListener = callBackListener
-        val display = (mContext as Activity?)!!.windowManager.defaultDisplay
-        mWidth = display.width
+        mCallBackListener = callBackListener
+        mWidth = mContext!!.resources.displayMetrics.widthPixels
         initUI()
         initEvent()
         switchView(mDrawPoint!!.drawEmoji!!.status)
@@ -86,7 +86,7 @@ class DrawEmojiView(context: Context, drawPoint: DrawPoint?, callBackListener: C
         mTvEmoji!!.setOnClickListener(this)
 
         // Rotation handle touch listener
-        mIvRotate!!.setOnTouchListener { v, event ->
+        mIvRotate!!.setOnTouchListener { _, event ->
             if (OperationUtils.DISABLE) {
                 val action = event.action
                 val rawX = event.rawX
@@ -115,7 +115,6 @@ class DrawEmojiView(context: Context, drawPoint: DrawPoint?, callBackListener: C
                     }
                     MotionEvent.ACTION_UP -> {
                          if (mCallBackListener != null) {
-                            val params = mRlContent!!.layoutParams as LayoutParams
                             mDrawPoint!!.drawEmoji!!.rotation = mRlContent!!.rotation
                             mCallBackListener!!.onUpdate(mDrawPoint)
                         }

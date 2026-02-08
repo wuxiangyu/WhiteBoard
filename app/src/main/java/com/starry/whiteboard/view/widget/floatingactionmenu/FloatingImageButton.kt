@@ -18,14 +18,14 @@ open class FloatingImageButton : ImageButton {
     constructor(context: Context) : this(context, null)
 
     constructor(context: Context, attrs: AttributeSet?) : super(context, attrs) {
-        init(context)
+        init()
     }
 
     constructor(context: Context, attrs: AttributeSet?, defStyle: Int) : super(context, attrs, defStyle) {
-        init(context)
+        init()
     }
 
-    private fun init(context: Context) {
+    private fun init() {
         mPaint = Paint()
         mPaint!!.isAntiAlias = true //消除锯齿
     }

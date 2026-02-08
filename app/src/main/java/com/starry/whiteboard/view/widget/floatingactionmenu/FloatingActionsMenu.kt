@@ -247,7 +247,7 @@ open class FloatingActionsMenu : ViewGroup {
 
 
     private fun getColor(@ColorRes id: Int): Int {
-        return resources.getColor(id)
+        return androidx.core.content.ContextCompat.getColor(context, id)
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
@@ -474,7 +474,7 @@ open class FloatingActionsMenu : ViewGroup {
         return super.checkLayoutParams(p)
     }
 
-    private class LayoutParams(source: ViewGroup.LayoutParams) : ViewGroup.LayoutParams(source) {
+    private inner class LayoutParams(source: ViewGroup.LayoutParams) : ViewGroup.LayoutParams(source) {
 
         val mExpandDir = ObjectAnimator()
         val mExpandAlpha = ObjectAnimator()
@@ -494,20 +494,8 @@ open class FloatingActionsMenu : ViewGroup {
 
             mExpandAlpha.setProperty(View.ALPHA)
             mExpandAlpha.setFloatValues(0f, 1f)
-            
-            // Note: mExpandDirection is not available here easily (it's in the outer class).
-            // However, this inner class doesn't seem to access it in the original Java?
-            // Wait, in Java:
-            // switch (mExpandDirection) {
-            //     case EXPAND_UP: ...
-            // }
-            // Since it was an inner class in Java, it had access to mExpandDirection.
-            // In Kotlin, `private class` is static by default if I don't use `inner`.
-            // I should use `inner class`.
-        }
-        
-        fun setup(expandDirection: Int) {
-             when (expandDirection) {
+
+            when (mExpandDirection) {
                 EXPAND_UP, EXPAND_DOWN -> {
                     mCollapseDir.setProperty(View.TRANSLATION_Y)
                     mExpandDir.setProperty(View.TRANSLATION_Y)
@@ -518,7 +506,7 @@ open class FloatingActionsMenu : ViewGroup {
                 }
             }
         }
-
+        
         fun setAnimationsTarget(view: View) {
             mCollapseAlpha.target = view
             mCollapseDir.target = view
@@ -527,22 +515,11 @@ open class FloatingActionsMenu : ViewGroup {
 
             // Now that the animations have targets, set them to be played
             if (!animationsSetToPlay) {
-                // Accessing outer class animators? No, they are static fields in Java? No.
-                // mCollapseAnimation is instance field.
-                // In Java, LayoutParams was accessing `mCollapseAnimation` of the outer class?
-                // No.
-                // Java code:
-                /*
-                    if (!animationsSetToPlay) {
-                        mCollapseAnimation.play(mCollapseAlpha);
-                        mCollapseAnimation.play(mCollapseDir);
-                        mExpandAnimation.play(mExpandAlpha);
-                        mExpandAnimation.play(mExpandDir);
-                        animationsSetToPlay = true;
-                    }
-                */
-                // `mCollapseAnimation` is a field of FloatingActionsMenu.
-                // So LayoutParams needs access to outer class.
+                mCollapseAnimation.play(mCollapseAlpha)
+                mCollapseAnimation.play(mCollapseDir)
+                mExpandAnimation.play(mExpandAlpha)
+                mExpandAnimation.play(mExpandDir)
+                animationsSetToPlay = true
             }
         }
     }
@@ -575,7 +552,7 @@ open class FloatingActionsMenu : ViewGroup {
                      // In Java:
                      // TextView label = new TextView(context);
                      // label.setTextAppearance(getContext(), mLabelsStyle);
-                     label.setTextAppearance(getContext(), mLabelsStyle)
+                     label.setTextAppearance(mLabelsStyle)
                 }
                 label.text = title
                 addView(label)

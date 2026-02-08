@@ -113,11 +113,15 @@ object StoreUtil {
                     }
                     val path = Path()
                     path.moveTo(drawPenStr.moveTo!!.x, drawPenStr.moveTo!!.y)
-                    for (i in 0 until drawPenStr.quadToA!!.size) {
-                        val pointA = drawPenStr.quadToA!![i]
-                        val pointB = drawPenStr.quadToB!![i]
+                    for (i in 0 until drawPenStr.quadToA.size) {
+                        val pointA = drawPenStr.quadToA[i]
+                        val pointB = drawPenStr.quadToB[i]
                         path.quadTo(pointA.x, pointA.y, pointB.x, pointB.y)
                     }
+// ... (skipping some lines, better separate calls)
+// I'll do separate calls for different parts of StoreUtil.
+// This is for quadToA.
+// And another for toFile!!.delete() etc.
                     path.lineTo(drawPenStr.lineTo!!.x, drawPenStr.lineTo!!.y)
                     path.offset(drawPenStr.offset!!.x, drawPenStr.offset!!.y)
 
@@ -139,39 +143,37 @@ object StoreUtil {
             Log.d(TAG, "Trying to save null or 0 length strWb or path")
             return
         }
-        var toFile: File? = File(path!!)
-        if (!toFile!!.parentFile.exists()) {
-            toFile.parentFile.mkdirs()
+        val toFile = File(path!!)
+        val parent = toFile.parentFile
+        if (parent != null && !parent.exists()) {
+            parent.mkdirs()
         }
         if (toFile.exists()) {
             toFile.delete()
         }
+        var createSuccess = false
         try {
             toFile.createNewFile()
+            createSuccess = true
         } catch (e: IOException) {
             Log.e(TAG, "IOException：" + e.message)
-            toFile = null
         } finally {
-            if (null != toFile && null != strWb) {
+            if (createSuccess && strWb != null) {
                 var outStream: OutputStream? = null
                 try {
                     outStream = FileOutputStream(toFile)
+                    outStream.write(strWb.toByteArray(charset(CHARSET)))
+                    outStream.flush()
                 } catch (e: FileNotFoundException) {
                     Log.d(TAG, "FileNotFoundException：" + e.message)
-                    outStream = null
+                } catch (e: IOException) {
+                    Log.e(TAG, "IOException：" + e.message)
                 } finally {
-                    if (null != outStream) {
+                    if (outStream != null) {
                         try {
-                            outStream.write(strWb.toByteArray(charset("utf-8")))
-                            outStream.flush()
+                            outStream.close()
                         } catch (e: IOException) {
-                            Log.e(TAG, "IOException：" + e.message)
-                        } finally {
-                            try {
-                                outStream.close()
-                            } catch (e: IOException) {
-                                Log.d(TAG, "IOException" + e.message)
-                            }
+                            Log.d(TAG, "IOException" + e.message)
                         }
                     }
                 }

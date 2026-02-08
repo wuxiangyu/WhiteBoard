@@ -11,6 +11,7 @@ import com.starry.whiteboard.wblib.utils.OperationUtils
 
 import com.starry.whiteboard.wblib.EventBus
 import com.starry.whiteboard.wblib.utils.Events
+import com.starry.whiteboard.wblib.utils.AppContextUtil
 
 class DrawEmojiLayout : FrameLayout {
     private var mContext: Context? = null
@@ -28,8 +29,8 @@ class DrawEmojiLayout : FrameLayout {
         mContext = context
     }
 
-    fun init(activity: Activity) {
-        this.setBackgroundColor(resources.getColor(R.color.transparent))
+    fun init() {
+        this.setBackgroundColor(AppContextUtil.getColor(R.color.transparent))
         showPoints()
     }
 

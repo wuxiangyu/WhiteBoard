@@ -14,6 +14,7 @@ import com.starry.whiteboard.wblib.bean.DrawPoint
 import com.starry.whiteboard.wblib.bean.Point
 import com.starry.whiteboard.wblib.utils.Events
 import com.starry.whiteboard.wblib.utils.OperationUtils
+import com.starry.whiteboard.wblib.utils.AppContextUtil
 import kotlin.math.abs
 
 class DrawPenView : View {
@@ -107,11 +108,18 @@ class DrawPenView : View {
      * 初始化画笔
      */
     fun changeEraser() {
-        mPaint!!.color = mContext!!.resources.getColor(R.color.transparent)
+        mPaint!!.color = AppContextUtil.getColor(R.color.transparent)
         mPaint!!.strokeWidth = (2 * OperationUtils.mCurrentEraserSize).toFloat()
         mPaint!!.xfermode = PorterDuffXfermode(PorterDuff.Mode.CLEAR) //擦除模式
         postInvalidate()
     }
+
+// ... (skipping some lines if I can target precisely or use multiple chunks)
+
+// Wait, replace_file_content is single contiguous block. I'll use separate calls or try to encompass them.
+// The !! assertions are way down in onTouchEvent (line 212). The changeEraser is line 109.
+// Too far apart. I should use multi_replace. Or separate calls.
+// I'll use separate calls. This one for changeEraser.
 
     /**
      * 修改橡皮擦尺寸
@@ -209,8 +217,8 @@ class DrawPenView : View {
                     val dx = abs(x - posX)
                     val dy = abs(y - posY)
                     if (dx >= TOUCH_TOLERANCE || dy > TOUCH_TOLERANCE) {
-                        mDrawPenStr!!.quadToA!!.add(Point(posX, posY))
-                        mDrawPenStr!!.quadToB!!.add(Point((x + posX) / 2, (y + posY) / 2))
+                        mDrawPenStr!!.quadToA.add(Point(posX, posY))
+                        mDrawPenStr!!.quadToB.add(Point((x + posX) / 2, (y + posY) / 2))
                         mPath!!.quadTo(posX, posY, (x + posX) / 2, (y + posY) / 2)
                         posX = x
                         posY = y

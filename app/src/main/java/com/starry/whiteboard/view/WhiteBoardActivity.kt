@@ -85,7 +85,7 @@ class WhiteBoardActivity : BaseActivity(), View.OnClickListener, EmojiBSFragment
     override val layoutId: Int
         get() = R.layout.activity_white_board
 
-    override fun afterCreate(bundle: Bundle?) {
+    override fun afterCreate(savedInstanceState: Bundle?) {
         initView()
         initEvent()
     }
@@ -137,10 +137,10 @@ class WhiteBoardActivity : BaseActivity(), View.OnClickListener, EmojiBSFragment
         mLlWhiteBoardPre = findViewById(R.id.ll_white_board_pre)
         mLlWhiteBoardNext = findViewById(R.id.ll_white_board_next)
         
-        mDtView.init(this)
-        mDeView.init(this) // keep existing init if it was there? No, looking at initView: mDeView = findViewById...
+        mDtView.init()
+        mDeView.init() // keep existing init if it was there? No, looking at initView: mDeView = findViewById...
         mDeView.setOnEmojiActionListener(this)
-        mDtView.init(this)
+        mDtView.init()
         val keepPoints = intent.getBooleanExtra("KEEP_POINTS", false)
         OperationUtils.init(keepPoints) // Ensure defaults (DISABLE=true)
         if (keepPoints) {
@@ -219,7 +219,7 @@ class WhiteBoardActivity : BaseActivity(), View.OnClickListener, EmojiBSFragment
     override fun onClick(view: View) {
         val id = view.id
         if (id == R.id.iv_white_board_back) {
-            onBackPressed()
+            onBackPressedDispatcher.onBackPressed()
         } else if (id == R.id.iv_white_board_quit) {
             afterEdit(false)
         } else if (id == R.id.iv_white_board_confirm) {
@@ -753,24 +753,21 @@ class WhiteBoardActivity : BaseActivity(), View.OnClickListener, EmojiBSFragment
         val file = File(fileName)
         try {
             val directory = file.parentFile
-            if (!directory.exists() && !directory.mkdirs()) {
+            if (directory != null && !directory.exists() && !directory.mkdirs()) {
                 showMessage(getString(R.string.white_board_export_fail))
                 return
             }
             file.createNewFile()
             val out = FileOutputStream(file)
-            mFlView.isDrawingCacheEnabled = true
-            mFlView.buildDrawingCache()
-            val bitmap = mFlView.drawingCache
+            val bitmap = Bitmap.createBitmap(mFlView.width, mFlView.height, Bitmap.Config.ARGB_8888)
+            val canvas = android.graphics.Canvas(bitmap)
+            mFlView.draw(canvas)
             bitmap.compress(Bitmap.CompressFormat.PNG, 100, out)
             out.flush()
             out.close()
-            mFlView.destroyDrawingCache()
 
-            val intent = Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE)
-            val uri = Uri.fromFile(file)
-            intent.data = uri
-            sendBroadcast(intent) //这个广播的目的就是更新图库
+
+            android.media.MediaScannerConnection.scanFile(this, arrayOf(file.toString()), null, null)
 
             showMessage(getString(R.string.white_board_export_tip) + fileName)
         } catch (e: Exception) {
@@ -779,9 +776,7 @@ class WhiteBoardActivity : BaseActivity(), View.OnClickListener, EmojiBSFragment
         }
     }
 
-    override fun onBackPressed() {
-        super.onBackPressed()
-    }
+
 
     @ReceiveEvents(name = Events.WHITE_BOARD_TEXT_EDIT)
     private fun textEdit() { //文字编辑

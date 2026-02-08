@@ -54,23 +54,23 @@ object WhiteBoardVariable {
     object Color {
         /**黑色 */
         @JvmField
-        val BLACK = AppContextUtil.getContext()!!.resources.getColor(R.color.grey_3e)
+        val BLACK = AppContextUtil.getColor(R.color.grey_3e)
 
         /**橙色 */
         @JvmField
-        val ORANGE = AppContextUtil.getContext()!!.resources.getColor(R.color.orange)
+        val ORANGE = AppContextUtil.getColor(R.color.orange)
 
         /**粉色 */
         @JvmField
-        val PINK = AppContextUtil.getContext()!!.resources.getColor(R.color.light_red)
+        val PINK = AppContextUtil.getColor(R.color.light_red)
 
         /**紫色 */
         @JvmField
-        val PURPLE = AppContextUtil.getContext()!!.resources.getColor(R.color.primary_purple)
+        val PURPLE = AppContextUtil.getColor(R.color.primary_purple)
 
         /**绿色 */
         @JvmField
-        val GREEN = AppContextUtil.getContext()!!.resources.getColor(R.color.green)
+        val GREEN = AppContextUtil.getColor(R.color.green)
     }
 
     /**画笔大小 */
